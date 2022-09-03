@@ -35,7 +35,14 @@ FBLA Chapter Management Platform
 5. Uncheck the "Enable Google Analytics for this project" checkbox
 6. Click "Create Project"
 7. Navigate to "Project Overview"
+
 ![project overview](./docs/project-overview.png)
+
+8. Click on "web"
+
+![create firebase app](./docs/create-firebase-app.png)
+
+9. 
 
 
 Notes:
