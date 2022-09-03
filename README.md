@@ -11,11 +11,13 @@ FBLA Chapter Management Platform
 
 ## Installation & Project Configuration
 
+### General Installation Steps
+
 1. Fork this repo
 2. Install **node.js**
  - Install node.js following these [instructions](https://nodejs.org/en/download/)
+3. Clone the forked repo following these [steps under "Cloning a repository"](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository#cloning-a-repository)
 
----
 ### Setting up Firebase Console
 
 3. Navigate to [Firebase Console](https://console.firebase.google.com/)
