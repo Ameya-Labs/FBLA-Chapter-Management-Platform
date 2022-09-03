@@ -1,0 +1,16 @@
+.Root {
+  width: 100%;
+  height: 100%;
+}
+
+.Root > * {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  position: absolute;
+}
+
+.App {
+  text-align: center;
+}
