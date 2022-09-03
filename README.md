@@ -22,7 +22,9 @@ FBLA Chapter Management Platform
 
 3. Navigate to [Firebase Console](https://console.firebase.google.com/)
   - Sign into the Google account you would like to use to manage this platform
-4. Press "Create New Project" 
+4. Click "Create New Project", entering the name of your chapter in lowercase (ex. washingtonfbla)
+5. Uncheck the "Enable Google Analytics for this project" checkbox
+6. Click "Create Project"
 
 Notes:
 
