@@ -31,7 +31,7 @@ Notes:
 * Set up .env db tokens
 * (possibly) set up Github actions ???? - Need to add github secrets
 * Set up settings.template.json file
-* Update images - /src/assets
+* Update images - /src/assets (https://github.com/akjadhav/FBLA-Chapter-Management-Platform/tree/master/src/assets)
   * chapter-icon.png
   * landing-page-img.jpg
   * logo.svg
