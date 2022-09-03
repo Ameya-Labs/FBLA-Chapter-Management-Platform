@@ -1,4 +1,4 @@
-<h3 align="center">Denmark FBLA</h3>
+<h3 align="center">FBLA Chapter Management Platform</h3>
 
 
 ## Table of Contents
