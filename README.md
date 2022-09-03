@@ -37,6 +37,7 @@ Notes:
   * logo.svg
 * Update school info into .txt file
 * Node script to create db collections (probably only db_store and email_templates)
+* Update chaptersUsing.txt
 
 ## Available Scripts for npm <a name = "npm_scripts"></a>
 
