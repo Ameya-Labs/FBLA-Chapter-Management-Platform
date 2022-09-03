@@ -34,6 +34,9 @@ FBLA Chapter Management Platform
 4. Click "Create New Project", entering the name of your chapter in lowercase (ex. washingtonfbla)
 5. Uncheck the "Enable Google Analytics for this project" checkbox
 6. Click "Create Project"
+7. Navigate to "Project Overview"
+
+
 
 Notes:
 
