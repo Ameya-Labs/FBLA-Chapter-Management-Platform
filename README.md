@@ -66,6 +66,17 @@ REACT_APP_MESSAGING_SENDER_ID=
 REACT_APP_APP_ID=
 ```
 
+13. Add the keys that you copied from step 10 into the .env file, including quotation marks (""). The final .env file should look like this...
+
+```
+REACT_APP_API_KEY=AIS92kmis-flKO-2Msk_sP092mf4
+REACT_APP_AUTH_DOMAIN=washingtonfbla.firebaseapp.com
+REACT_APP_PROJECT_ID=washingtonfbla
+REACT_APP_STORAGE_BUCKET=washingtonfbla.appspot.com
+REACT_APP_MESSAGING_SENDER_ID=1298038129
+REACT_APP_APP_ID=9:2981238017:web:dj0293sl3989rbs92
+```
+
 Notes:
 
 * Install Node.js
