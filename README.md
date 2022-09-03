@@ -1,7 +1,16 @@
 ## Introduction
 
 FBLA Chapter Management Platform
-- feature 1
+-  FBLA competitive event signup
+  - Emails to teams
+  - Group validation
+  - Intro event validation
+  - Automatic in-house checking
+  - Validation etc etc
+- Chapter meetings scheduler
+- Chapter meetings attendance platform
+- Calendar integration for chapter meetings and any events/conferences
+
 
 ## Table of Contents
 
