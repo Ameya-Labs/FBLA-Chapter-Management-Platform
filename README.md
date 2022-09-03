@@ -5,13 +5,21 @@ FBLA Chapter Management Platform
 
 ## Table of Contents
 
-- [Available Scripts for npm](#npm_scripts)
-- [Color Palette Used](#color_palette)
 - [Developer](#developer)
 - [License](#license)
 
 
-## Configuration
+## Installation & Project Configuration
+
+1. Fork this repo
+2. Install **node.js**
+ * Install node.js following these [instructions](https://nodejs.org/en/download/)
+ 
+## (Optional) For Developers
+
+1. Install **node.js**
+ * Install node.js following these [instructions](https://nodejs.org/en/download/)
+
 
 Notes:
 
@@ -35,6 +43,8 @@ Notes:
 * Update school info into .txt file
 * Node script to create db collections (probably only db_store and email_templates)
 * Update chaptersUsing.txt
+
+
 
 ## Available Scripts for npm <a name = "npm_scripts"></a>
 
@@ -67,7 +77,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## Developer <a name = "developer"></a>
 
-[Ameya Jadhav](http://ameyajadhav.su.domains)
+[Ameya Jadhav](http://ameyajadhav.su.domains) of [Ameya Labs](https://www.linkedin.com/company/ameya-labs)
 
 
 
