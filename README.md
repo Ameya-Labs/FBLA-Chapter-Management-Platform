@@ -1,5 +1,7 @@
-<h3 align="center">FBLA Chapter Management Platform</h3>
+## Introduction
 
+FBLA Chapter Management Platform
+- feature 1
 
 ## Table of Contents
 
@@ -7,11 +9,6 @@
 - [Color Palette Used](#color_palette)
 - [Developer](#developer)
 - [License](#license)
-
-## Features
-
-FBLA chapter management platform
-- feature 1
 
 
 ## Configuration
