@@ -77,6 +77,29 @@ REACT_APP_MESSAGING_SENDER_ID=1298038129
 REACT_APP_APP_ID=9:2981238017:web:dj0293sl3989rbs92
 ```
 
+14. You can save and close the .env file. Return to the Firebase Console and click next so you see this.
+
+![install-firebase-cli](./docs/install-firebase-cli.png)
+
+15. Open a terminal/cmd on your computer, navigate into the folder with your project, and run this code
+
+`npm install -g firebase-tools`
+
+16. Click next and skip the "Deploy to Firebase Hosting" section. Click the "Continue to console" blue button.
+
+![skip-firebase-deploy](./docs/skip-firebase-deploy.png)
+
+
+
+
+
+```
+firebase login
+firebase init
+firebase deploy
+```
+
+---
 Notes:
 
 * Install Node.js
