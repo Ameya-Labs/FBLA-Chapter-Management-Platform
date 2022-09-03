@@ -92,12 +92,18 @@ REACT_APP_APP_ID=9:2981238017:web:dj0293sl3989rbs92
 
 
 
+* Set up Cloud billing
+* Set up cloud functions
 
 ```
 firebase login
 firebase init
 firebase deploy
 ```
+* Set up STMP email service
+* Install firebase email extension
+* Set up settings.js file
+* Node script to create db collections (probably only db_store and email_templates)
 
 ---
 Notes:
