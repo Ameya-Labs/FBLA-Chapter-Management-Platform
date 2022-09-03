@@ -15,6 +15,12 @@ FBLA Chapter Management Platform
 2. Install **node.js**
  - Install node.js following these [instructions](https://nodejs.org/en/download/)
 
+---
+### Setting up Firebase Console
+
+3. Navigate to [Firebase Console](https://console.firebase.google.com/)
+  - Sign into the Google account you would like to use to manage this platform
+4. Press "Create New Project" 
 
 Notes:
 
