@@ -68,12 +68,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 
 
-## Color Palette <a name = "color_palette"></a>
-
-[Color Palette Used](https://coolors.co/palette/495867-577399-bdd5ea-f7f7ff-fe5f55)
-
-
-
 ## Developer <a name = "developer"></a>
 
 [Ameya Jadhav](http://ameyajadhav.su.domains)
@@ -82,4 +76,4 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## License <a name = "license"></a>
 
-This project is licensed under the terms of the [MIT license](https://github.com/akjadhav/DenmarkFBLA/blob/main/LICENSE.md).
+This project is licensed under the terms of the [MIT license](https://github.com/akjadhav/FBLA-Chapter-Management-Platform/blob/main/LICENSE.md).
