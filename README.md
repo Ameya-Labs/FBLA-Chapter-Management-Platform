@@ -26,6 +26,7 @@ FBLA Chapter Management Platform
 2. Install **node.js**
  - Install node.js following these [instructions](https://nodejs.org/en/download/)
 3. Clone the forked repo following these [steps under "Cloning a repository"](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository#cloning-a-repository)
+4. Opened the cloned repo in a code editor, like Webstorm, PyCharm, Atom, VSCode, etc.
 
 ### Setting up Firebase Console
 
@@ -42,8 +43,28 @@ FBLA Chapter Management Platform
 
 ![create firebase app](./docs/create-firebase-app.png)
 
-9. 
+9. Enter chapter name as app nickname (ex. Washington FBLA) and check "Also set up Firebase Hosting for this app", and click Register
 
+![add-firebase-to-app-options](./docs/add-firebase-to-app-options.png)
+
+10. Ignore the code under "Add Firebase SDK" step. Instead, copy the code under "// Your web app's Firebase configuration"
+
+![firebase-keys](./docs/firebase-keys.png)
+
+11. Open your code editor with the project open (from the previous part) and create a new file called ".env" in the same level as chaptersUsing.txt
+
+![create-env](./docs/create-env.png)
+
+12. Copy the following code into the newly created .env file
+
+```
+REACT_APP_API_KEY=
+REACT_APP_AUTH_DOMAIN=
+REACT_APP_PROJECT_ID=
+REACT_APP_STORAGE_BUCKET=
+REACT_APP_MESSAGING_SENDER_ID=
+REACT_APP_APP_ID=
+```
 
 Notes:
 
