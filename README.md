@@ -13,17 +13,16 @@ FBLA Chapter Management Platform
 
 1. Fork this repo
 2. Install **node.js**
- * Install node.js following these [instructions](https://nodejs.org/en/download/)
- 
-## (Optional) For Developers
-
-1. Install **node.js**
- * Install node.js following these [instructions](https://nodejs.org/en/download/)
+ - Install node.js following these [instructions](https://nodejs.org/en/download/)
 
 
 Notes:
 
 * Install Node.js
+* Set up Firebase project
+* Set up Cloud billing
+* Set up .env db tokens
+
 * Set up cloud functions
 * Set up Firebase
 * Set up STMP email service
@@ -32,8 +31,8 @@ Notes:
  * Enable 2FA
  * Create App Password
  * Visit accounts.google.com/b/0/DisplayUnlockCaptcha
-* Set up Cloud billing
-* Set up .env db tokens
+
+
 * (possibly) set up Github actions ???? - Need to add github secrets
 * Set up settings.js file
 * Update images - /src/assets (https://github.com/akjadhav/FBLA-Chapter-Management-Platform/tree/master/src/assets)
