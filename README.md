@@ -66,7 +66,7 @@ REACT_APP_MESSAGING_SENDER_ID=
 REACT_APP_APP_ID=
 ```
 
-13. Add the keys that you copied from step 10 into the .env file, including quotation marks (""). The final .env file should look like this...
+13. Add the keys that you copied from step 10 into the .env file, WITH NO quotation marks (""). The final .env file should look like this...
 
 ```
 REACT_APP_API_KEY=AIS92kmis-flKO-2Msk_sP092mf4
