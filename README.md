@@ -12,19 +12,23 @@ FBLA Chapter Management Platform
 - Calendar integration for chapter meetings and any events/conferences
 
 
+
 ## Table of Contents
 
 - [Developer](#developer)
 - [License](#license)
 
 
+
 ## Installation & Project Configuration
 
 ### General Installation Steps
 
+
 ---
 [Fill out this Google Form](https://forms.gle/3USTZkTHqKwXqdTn9)
 ---
+
 
 1. Fork this repo
 2. Install **node.js**
