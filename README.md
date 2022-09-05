@@ -23,7 +23,6 @@ FBLA Chapter Management Platform
 ## Installation & Project Configuration
 
 ### General Installation Steps
-<br/><br/>
 
 ---
 
