@@ -15,14 +15,23 @@ FBLA Chapter Management Platform
 <br/><br/>
 ## Table of Contents
 
+- [Installation & Project Configuration](#installation)
+  - [General Installation Steps](#general)
+  - [Setting up Firebase Console](#console)
+  - [Setting up Firebase Billing](#billing)
+  - [Setting up Email Service Provider](#email)
+  - [Setting up Firebase Firestore and Authentication services](#firestore-auth)
+  - [Completing Project Set Up](#completing)
+  - [Hosting on Website](#hosting)
+  - [Last steps](#laststeps)
 - [Developer](#developer)
 - [License](#license)
 
 
 <br/><br/>
-## Installation & Project Configuration
+## Installation & Project Configuration <a name = "installation"></a>
 
-### General Installation Steps
+### General Installation Steps <a name = "general"></a>
 
 ---
 
@@ -36,7 +45,7 @@ FBLA Chapter Management Platform
 3. Clone the forked repo following these [steps under "Cloning a repository"](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository#cloning-a-repository)
 4. Opened the cloned repo in a code editor, like Webstorm, PyCharm, Atom, VSCode, etc.
 
-### Setting up Firebase Console
+### Setting up Firebase Console <a name = "console"></a>
 
 3. Navigate to [Firebase Console](https://console.firebase.google.com/)
   - Sign into the Google account you would like to use to manage this platform
@@ -94,7 +103,7 @@ REACT_APP_APP_ID=9:2981238017:web:dj0293sl3989rbs92
 
 ![skip-firebase-deploy](./docs/skip-firebase-deploy.png)
 
-### Setting up Firebase Billing
+### Setting up Firebase Billing <a name = "billing"></a>
 
 17. Navigate to https://console.firebase.google.com/u/0/project/[CHAPTER_NAME_FROM_STEP_4_HERE]/usage/details
 18. On this page, click on "Modify plan" and then select "Blaze" "Pay as you go" plan.
@@ -109,7 +118,8 @@ REACT_APP_APP_ID=9:2981238017:web:dj0293sl3989rbs92
 
 ![finished-billing](./docs/finished-billing.png)
 
-### Setting up Email Service Provider
+### Setting up Email Service Provider <a name = "email"></a>
+
 The project uses a Gmail service provider to be able to send automated emails when members create competitive event teams.
 
 25. Open a new tab and navigate to Create a [New Google Account](https://accounts.google.com/signup)
@@ -153,7 +163,7 @@ Templates collection:       email_templates
 ```
 39. Click on "Install extension" and wait 3-5 minutes as it installs into your project.
 
-### Setting up Firebase Firestore and Authentication services
+### Setting up Firebase Firestore and Authentication services <a name = "firestore-auth"></a>
 
 40. Navigate to the Firestore Database tab under Build.
 
@@ -173,7 +183,7 @@ Templates collection:       email_templates
 
 ![email-password](./docs/email-password.png)
 
-### Completing Project Set Up
+### Completing Project Set Up <a name = "completing"></a>
 
 46. Navigate back to your project in your code editor.
 47. Edit the settings.js file under `src/settings.js`
@@ -193,7 +203,7 @@ npm install -g firebase-tools
 
 ![firestore-data](./docs/firestore-data.png)
 
-### Hosting on Website
+### Hosting on Website <a name = "hosting"></a>
 
 Now that all the code and services are set up, one of the last steps is hosting onto a website. We will use Firebase Hosting for this.
 
@@ -218,7 +228,7 @@ Email: ameyalabs-fbla@gmail.com
 Password: AmeyaLabsFBLA123
 ```
 
-### Last steps
+### Last steps <a name = "laststeps"></a>
 
 54. Navigate to "Rules" tab of "Cloud Firestore" in the Firebase console. Replace the current rules you see with the following...
 ```
