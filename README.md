@@ -178,13 +178,13 @@ Templates collection:       email_templates
 46. Navigate back to your project in your code editor.
 47. Edit the settings.js file under `src/settings.js`
   - You can edit these variables in this file to customize the look and information on the platform.
-48. Add your chapter images under `/src/assets`
+48. Add your chapter images under `/src/assets`.
 '''
 chapter-icon.png
 landing-page-img.jpg
 logo.svg
 '''
-will need to be updated. You can convert a regular image to SVG using [this online converter](https://convertio.co/jpg-svg/).
+will need to be updated. You can convert a regular image to SVG using [this online converter](https://convertio.co/jpg-svg/). Also update `favicon.ico` under `/public`. You can convert a regular image to ICO using [this online converter](https://convertio.co/png-ico/).
 49. Once you have updated these files, complete the following commands in a Terminal/CMD window in your project folder, one at a time.
 `npm install`
 `npm install -g firebase-tools`
