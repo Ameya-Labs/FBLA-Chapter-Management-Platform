@@ -89,10 +89,72 @@ REACT_APP_APP_ID=9:2981238017:web:dj0293sl3989rbs92
 
 ![skip-firebase-deploy](./docs/skip-firebase-deploy.png)
 
+### Setting up Firebase Billing
+
+17. Navigate to https://console.firebase.google.com/u/0/project/[CHAPTER NAME FROM STEP 4 HERE]/usage/details
+18. On this page, click on "Modify plan" and then select "Blaze" "Pay as you go" plan.
+20. Clicking "Continue" you should be taken to Google Cloud console to set up a billing account as seen below.
+
+![cloud-billling](./docs/skip-cloud-billling.png)
+
+21. Follow the billing steps to set up a billing account - creating a Business account and linking a credit/debit card or bank account.
+22. Once you finish, you will be taken back to Firebase Console.
+23. (optional) Set a billing budget if asked
+24. If you completed the steps correctly, you will see a popup similar to this.
+
+![finished-billing](./docs/finished-billing.png)
+
+### Setting up Email Service Provider
+The project uses a Gmail service provider to be able to send automated emails when members create competitive event teams.
+
+25. Open a new tab and navigate to Create a [New Google Account](https://accounts.google.com/signup)
+26. Create a new Google account with the first name being your chapter name and last name being "FBLA"
+27. Create the email following the following format `noreply.auto.[CHAPTER NAME IN LOWERCASE FROM STEP 4]@gmail.com` (ex. noreply.auto.washingtonfbla@gmail.com)
+28. Create a password and save it (you will need this password in the future). Complete the rest of the account creation steps.
+29. Turn on [2-Step verifcation for this new Google account (REQUIRED)](https://support.google.com/accounts/answer/185839?hl=en&co=GENIE.Platform%3DiOS&oco=0)
+30. Navigate to App [Passwords](https://myaccount.google.com/apppasswords)
+31. Create a new App Password for "Other (Custom name)", naming it "Firebase".
+
+![app-password](./docs/app-password.png)
+
+32. Click Generate, and save the app password that is in yellow. You will need this password in the future.
+33. Navigate to [this link](accounts.google.com/b/0/DisplayUnlockCaptcha) and complete the steps.
+34. Navigate to [Firebase Trigger Email Extension](https://firebase.google.com/products/extensions/firebase-firestore-send-email) and click "Install in console". Select your FBLA chapter firebase project from the list.
+35. A 4-step set up window will open. Please read step 1, acknowledge, and click Next.
+36. In Step 2, enable the following options, and then click Next.
+
+![email-step-two](./docs/email-step-two.png)
+
+37. Step 3 includes information about how Google Cloud permissions will be updated. You can read through this or ignore and click Next.
+38. Step 4 will ask you to configure the extension. Fill in the following data into the respective fields, and leave all other fields that are not listed below blank. Click "Create secret" once you enter the SMTP password.
+```
+Cloud Functions location:   Iowa (us-central1)
+SMTP connection URI:        smtps://[EMAIL FROM STEP 27 HERE]@smtp.gmail.com:465
+SMTP password:              [APP PASSWORD FROM STEP 32]
+Email documents collection: mail
+Default FROM address:       [CHAPTER NAME HERE] <[EMAIL FROM STEP 27 HERE]>
+Default REPLY-TO address:   [CHAPTER/ADVISER EMAIL ADDRESS HERE]
+Templates collection:       email_templates
+```
+Example:
+```
+Cloud Functions location:   Iowa (us-central1)
+SMTP connection URI:        smtps://noreply.auto.washingtonfbla@gmail.com@smtp.gmail.com:465
+SMTP password:              ksloeptnsjeiomgs
+Email documents collection: mail
+Default FROM address:       Washington FBLA <noreply.auto.washingtonfbla@gmail.com>
+Default REPLY-TO address:   washingtonfbla.chapter@gmail.com
+Templates collection:       email_templates
+```
+39. Click on "Install extension" and wait 3-5 minutes as it installs into your project.
 
 
 
-* Set up Cloud billing
+ * Create new Gmail account
+ * Enable 2FA
+ * Create App Password
+ * Visit accounts.google.com/b/0/DisplayUnlockCaptcha
+
 * Set up cloud functions
 
 ```
