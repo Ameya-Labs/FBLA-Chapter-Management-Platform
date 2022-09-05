@@ -215,8 +215,8 @@ Now that all the code and services are set up, one of the last steps is hosting 
 ![firebase-hosting-5](./docs/firebase-hosting-5.png)
 ![firebase-hosting-6](./docs/firebase-hosting-6.png)
 
-52. Run 'npm build'
-53. Run 'firebase deploy'
+52. Run `npm run build`
+53. Run `firebase deploy`
 
 
 ### Last steps
