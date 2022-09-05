@@ -196,7 +196,27 @@ will need to be updated. You can convert a regular image to SVG using [this onli
 49. Once you have updated these files, complete the following commands in a Terminal/CMD window in your project folder, one at a time.
 `npm install`
 `npm install -g firebase-tools`
+`yarn start`
+You should see the platform at http://localhost:3000/. In your Firebase Console -> Cloud Firestore, you should see new data under "db_store" and "email_templates".
 
+![firestore-data](./docs/firestore-data.png)
+
+### Hosting on Website
+
+Now that all the code and services are set up, one of the last steps is hosting onto a website. We will use Firebase Hosting for this.
+
+50. Run `firebase login` in a Terminal/CMD window in your project folder. Follow the login steps that appear.
+51. Run `firebase init`, and follow the steps in the images below, selecting the same options (IMPORTAN: Say "N" to all prompts asking to overwrite any files).
+
+![firebase-hosting-1](./docs/firebase-hosting-1.png)
+![firebase-hosting-2](./docs/firebase-hosting-2.png)
+![firebase-hosting-3](./docs/firebase-hosting-3.png)
+![firebase-hosting-4](./docs/firebase-hosting-4.png)
+![firebase-hosting-5](./docs/firebase-hosting-5.png)
+![firebase-hosting-6](./docs/firebase-hosting-6.png)
+
+52. Run 'npm build'
+53. Run 'firebase deploy'
 
 
 ### Last steps
