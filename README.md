@@ -234,7 +234,7 @@ service cloud.firestore {
 
 55. You can use [this filled out Competitive Events list](https://github.com/akjadhav/FBLA-Chapter-Management-Platform/blob/main/public/csv_templates/events_template_filled.xlsx) to intially upload into your management platform.
 
-### (optional) GitHub Actions
+
 
 
 <br/><br/>
