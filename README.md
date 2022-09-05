@@ -92,7 +92,7 @@ REACT_APP_APP_ID=9:2981238017:web:dj0293sl3989rbs92
 18. On this page, click on "Modify plan" and then select "Blaze" "Pay as you go" plan.
 20. Clicking "Continue" you should be taken to Google Cloud console to set up a billing account as seen below.
 
-![cloud-billling](./docs/skip-cloud-billling.png)
+![cloud-billling](./docs/cloud-billling.png)
 
 21. Follow the billing steps to set up a billing account - creating a Business account and linking a credit/debit card or bank account.
 22. Once you finish, you will be taken back to Firebase Console.
@@ -217,6 +217,9 @@ Now that all the code and services are set up, one of the last steps is hosting 
 
 52. Run `npm run build`
 53. Run `firebase deploy`
+
+
+(OPTIONAL GITHUB ACTIONS)
 
 
 ### Last steps
