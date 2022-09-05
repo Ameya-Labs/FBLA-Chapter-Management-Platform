@@ -156,22 +156,6 @@ Templates collection:       email_templates
 
 ![firestore-location](./docs/firestore-location.png)
 
-Next, navigate to "Rules" tab under "Cloud Firestore" and replace the current code with
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write;
-      allow read;
-    }
-  }
-}
-```
-and click Publish.
-
-![firestore-rules](./docs/firestore-rules.png)
-
 43. Navigate to "Authentication" under "Build" (left side bar), similar to step 40.
 44. Click "Get started". Click on "Email/Password" option as shown below.
 
@@ -196,8 +180,6 @@ will need to be updated. You can convert a regular image to SVG using [this onli
 49. Once you have updated these files, complete the following commands in a Terminal/CMD window in your project folder, one at a time.
 `npm install`
 `npm install -g firebase-tools`
-`yarn start`
-You should see the platform at http://localhost:3000/. In your Firebase Console -> Cloud Firestore, you should see new data under "db_store" and "email_templates".
 
 ![firestore-data](./docs/firestore-data.png)
 
@@ -218,6 +200,13 @@ Now that all the code and services are set up, one of the last steps is hosting 
 52. Run `npm run build`
 53. Run `firebase deploy`
 
+The platform should be live on the Firebase website. An example site is ameyalabs-fbla.web.app/. In your Firebase Console -> Cloud Firestore, you should see new data under "db_store" and "email_templates". An Adviser account has temporarily been created so you can log into the system and make youself an account. Please be sure to delete this temp Adviser account once you successfully create an account for yourself.
+
+The temp Adviser account credentials are...
+```
+Email: ameyalabs-fbla@gmail.com
+Password: AmeyaLabsFBLA123
+```
 
 (OPTIONAL GITHUB ACTIONS)
 
