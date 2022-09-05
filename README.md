@@ -77,13 +77,10 @@ REACT_APP_MESSAGING_SENDER_ID=1298038129
 REACT_APP_APP_ID=9:2981238017:web:dj0293sl3989rbs92
 ```
 
-14. You can save and close the .env file. Return to the Firebase Console and click next so you see this.
+14. You can save and close the .env file. 
+15. Return to the Firebase Console and click next so you see this.
 
 ![install-firebase-cli](./docs/install-firebase-cli.png)
-
-15. Open a terminal/cmd on your computer, navigate into the folder with your project, and run this code
-
-`npm install -g firebase-tools`
 
 16. Click next and skip the "Deploy to Firebase Hosting" section. Click the "Continue to console" blue button.
 
@@ -91,7 +88,7 @@ REACT_APP_APP_ID=9:2981238017:web:dj0293sl3989rbs92
 
 ### Setting up Firebase Billing
 
-17. Navigate to https://console.firebase.google.com/u/0/project/[CHAPTER NAME FROM STEP 4 HERE]/usage/details
+17. Navigate to https://console.firebase.google.com/u/0/project/[CHAPTER_NAME_FROM_STEP_4_HERE]/usage/details
 18. On this page, click on "Modify plan" and then select "Blaze" "Pay as you go" plan.
 20. Clicking "Continue" you should be taken to Google Cloud console to set up a billing account as seen below.
 
@@ -180,14 +177,15 @@ landing-page-img.jpg
 logo.svg
 '''
 will need to be updated. You can convert a regular image to SVG using [this online converter](https://convertio.co/jpg-svg/).
-49. Once you have updated these files, complete the following commands in a Terminal/CMD window in your project folder.
+49. Once you have updated these files, complete the following commands in a Terminal/CMD window in your project folder, one at a time.
 `npm install`
+`npm install -g firebase-tools`
 
 
 
 ### Last steps
 NUMBER. Navigate to [chaptersUsing.txt](https://github.com/akjadhav/FBLA-Chapter-Management-Platform/blob/main/chaptersUsing.txt)
-
+NUMBER. Import events
 
 
 ---
