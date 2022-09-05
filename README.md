@@ -23,13 +23,13 @@ FBLA Chapter Management Platform
 ## Installation & Project Configuration
 
 ### General Installation Steps
+<br/><br/>
 
 ---
 
 [Fill out this Google Form](https://forms.gle/3USTZkTHqKwXqdTn9)
 
 ---
-<br/><br/>
 
 1. Fork this repo
 2. Install **node.js**
