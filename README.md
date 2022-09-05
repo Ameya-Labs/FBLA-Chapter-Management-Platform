@@ -186,8 +186,10 @@ logo.svg
 '''
 will need to be updated. You can convert a regular image to SVG using [this online converter](https://convertio.co/jpg-svg/). Also update `favicon.ico` under `/public`. You can convert a regular image to ICO using [this online converter](https://convertio.co/png-ico/).
 49. Once you have updated these files, complete the following commands in a Terminal/CMD window in your project folder, one at a time.
-`npm install`
-`npm install -g firebase-tools`
+```
+npm install
+npm install -g firebase-tools
+```
 
 ![firestore-data](./docs/firestore-data.png)
 
