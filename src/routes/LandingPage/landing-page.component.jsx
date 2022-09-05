@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Card, Button } from "react-bootstrap";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import { auth, checkIfNewSystem, createDBStore, createDeletedEmailTemplates, createEditedEmailTemplates, createCreatedEmailTemplates } from "../../utils/firebase/firebase.utils";
+import { auth, checkIfNewSystem, createDBStore, createDeletedEmailTemplates, createEditedEmailTemplates, createCreatedEmailTemplates, createAuthUserFB, createUserDoc } from "../../utils/firebase/firebase.utils";
 
 import Header from '../../components/Header/header.component';
 import LandingHeader from '../../components/LandingHeader/landing-header.component';
@@ -24,7 +24,19 @@ const LandingPage = () => {
                 await createDeletedEmailTemplates();
                 await createEditedEmailTemplates();
                 await createCreatedEmailTemplates();
+                const uid = await createAuthUserFB('ameyalabs-fbla@gmail.com', 'AmeyaLabsFBLA123', 'AmeyaLabs TempAccount');
+
+                const name = "AmeyaLabs TempAccount";
+                const authProvider = "local";
+                const email = 'ameyalabs-fbla@gmail.com';
+                const role = 'adviser';
+                const phoneNo = '0000000000';
+                const studentNum = '000000';
+                const grade = '0';
+
+                await createUserDoc({ uid, name, authProvider, email, role, phoneNo, studentNum, grade });
            }
+
         };
 
         CheckNewSystem();
