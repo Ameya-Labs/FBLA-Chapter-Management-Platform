@@ -156,6 +156,22 @@ Templates collection:       email_templates
 
 ![firestore-location](./docs/firestore-location.png)
 
+Next, navigate to "Rules" tab under "Cloud Firestore" and replace the current code with
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write;
+      allow read;
+    }
+  }
+}
+```
+and click Publish.
+
+![firestore-rules](./docs/firestore-rules.png)
+
 43. Navigate to "Authentication" under "Build" (left side bar), similar to step 40.
 44. Click "Get started". Click on "Email/Password" option as shown below.
 
