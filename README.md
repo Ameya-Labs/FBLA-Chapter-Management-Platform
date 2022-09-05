@@ -19,16 +19,17 @@ FBLA Chapter Management Platform
 - [License](#license)
 
 
-
+<br/><br/>
 ## Installation & Project Configuration
 
 ### General Installation Steps
 
-
 ---
+
 [Fill out this Google Form](https://forms.gle/3USTZkTHqKwXqdTn9)
----
 
+---
+<br/><br/>
 
 1. Fork this repo
 2. Install **node.js**
@@ -237,13 +238,13 @@ service cloud.firestore {
 ### (optional) GitHub Actions
 
 
-
+<br/><br/>
 ## Developer <a name = "developer"></a>
 
 [Ameya Jadhav](http://ameyajadhav.su.domains) of [Ameya Labs](https://www.linkedin.com/company/ameya-labs)
 
 
-
+<br/><br/>
 ## License <a name = "license"></a>
 
 This project is licensed under the terms of the [MIT license](https://github.com/akjadhav/FBLA-Chapter-Management-Platform/blob/main/LICENSE.md).
