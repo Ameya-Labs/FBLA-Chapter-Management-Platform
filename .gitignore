@@ -20,3 +20,4 @@
 .env
 
 npm-debug.log*
+.firebase/hosting.YnVpbGQ.cache
