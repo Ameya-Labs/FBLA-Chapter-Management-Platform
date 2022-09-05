@@ -30,3 +30,4 @@ exports.deleteAuthUser = functions.https.onCall((uid) => {
         throw new functions.https.HttpsError("internal", error.message);
       });
 });
+
