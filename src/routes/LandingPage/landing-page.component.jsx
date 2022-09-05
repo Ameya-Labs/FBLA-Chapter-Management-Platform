@@ -1,8 +1,8 @@
-import React from 'react'
+import { useEffect } from 'react'
 import { Card, Button } from "react-bootstrap";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import { auth } from "../../utils/firebase/firebase.utils";
+import { auth, checkIfNewSystem, createDBStore, createDeletedEmailTemplates, createEditedEmailTemplates, createCreatedEmailTemplates } from "../../utils/firebase/firebase.utils";
 
 import Header from '../../components/Header/header.component';
 import LandingHeader from '../../components/LandingHeader/landing-header.component';
@@ -14,6 +14,21 @@ import APPLICATION_VARIABLES from '../../settings';
 
 const LandingPage = () => {
     const [user, loading, error] = useAuthState(auth);
+
+    useEffect(() => {
+        async function CheckNewSystem () {
+            const newSystem = await checkIfNewSystem();
+
+           if (!newSystem) {
+                await createDBStore();
+                await createDeletedEmailTemplates();
+                await createEditedEmailTemplates();
+                await createCreatedEmailTemplates();
+           }
+        };
+
+        CheckNewSystem();
+    })
 
     return (
         <div >
