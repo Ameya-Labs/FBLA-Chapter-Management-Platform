@@ -148,12 +148,50 @@ Templates collection:       email_templates
 ```
 39. Click on "Install extension" and wait 3-5 minutes as it installs into your project.
 
+### Setting up Firebase Firestore and Authentication services
+
+40. Navigate to the Firestore Database tab under Build.
+
+![firestore-database](./docs/firestore-database.png)
+
+41. Click "Create Database" and click "Next" without changing anything under "Secure rules for Cloud Firestore".
+42. On step 2, ensure the Cloud Firestore location is nam5 (us-central) and click Enable.
+
+![firestore-location](./docs/firestore-location.png)
+
+43. Navigate to "Authentication" under "Build" (left side bar), similar to step 40.
+44. Click "Get started". Click on "Email/Password" option as shown below.
+
+![auth-email-password](./docs/auth-email-password.png)
+
+45. Enable ONLY the first option, and click Save.
+
+![email-password](./docs/email-password.png)
+
+### Completing Project Set Up
+
+46. Navigate back to your project in your code editor.
+47. Edit the settings.js file under `src/settings.js`
+  - You can edit these variables in this file to customize the look and information on the platform.
+48. Add your chapter images under `/src/assets`
+'''
+chapter-icon.png
+landing-page-img.jpg
+logo.svg
+'''
+will need to be updated. You can convert a regular image to SVG using [this online converter](https://convertio.co/jpg-svg/).
+49. Once you have updated these files, complete the following commands in a Terminal/CMD window in your project folder.
+`npm install`
 
 
- * Create new Gmail account
- * Enable 2FA
- * Create App Password
- * Visit accounts.google.com/b/0/DisplayUnlockCaptcha
+
+### Last steps
+NUMBER. Navigate to [chaptersUsing.txt](https://github.com/akjadhav/FBLA-Chapter-Management-Platform/blob/main/chaptersUsing.txt)
+
+
+
+---
+
 
 * Set up cloud functions
 
@@ -162,8 +200,6 @@ firebase login
 firebase init
 firebase deploy
 ```
-* Set up STMP email service
-* Install firebase email extension
 * Set up settings.js file
 * Node script to create db collections (probably only db_store and email_templates)
 
@@ -191,9 +227,8 @@ Notes:
   * chapter-icon.png
   * landing-page-img.jpg
   * logo.svg
-* Update school info into .txt file
-* Node script to create db collections (probably only db_store and email_templates)
 * Update chaptersUsing.txt
+* Node script to create db collections (probably only db_store and email_templates)
 
 
 
