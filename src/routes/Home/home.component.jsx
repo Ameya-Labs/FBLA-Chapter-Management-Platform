@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import {Card, CardGroup, FloatingLabel, Form, Button, Badge, Modal} from "react-bootstrap";
+import {Card, CardGroup, FloatingLabel, Form, Button, Badge, Modal, ButtonGroup} from "react-bootstrap";
 
 import { postToDBStore, auth, createNewSignupDoc, updateSignupDoc, deleteSignupDoc, postSignupDateToDBStore } from "../../utils/firebase/firebase.utils";
 
@@ -429,12 +429,18 @@ const Home = () => {
     };
 
     const handleSignupDateChange = async (inputtedSignUpDate) => {
-        // await postSignupDateToDBStore(inputtedSignUpDate).then(() => {
-        //     toast.success('Saved date', TOAST_PROPS);
-        //     setSignupDate(inputtedSignUpDate);
-        // });
-        console.log(inputtedSignUpDate)
         setSignupDate(inputtedSignUpDate);
+    };
+
+    const handleSignupDateSubmit = async () => {
+        if (signupDate) {
+            await postSignupDateToDBStore(signupDate).then(() => {
+                toast.success('Saved date', TOAST_PROPS);
+            });
+        } else {
+            toast.error('Enter a date', TOAST_PROPS);
+        }
+        
     };
 
     const handleEventChange = async (eventCall, selectedEvent) => {
@@ -1099,8 +1105,9 @@ const Home = () => {
                                     style={{ maxWidth: '10rem', textAlign: "center" }}
                                     className="mx-auto mt-2"
                                 >
-                                <Form.Control className="mx-auto mt-2" type="date" name='date_of_birth' style={{ maxWidth: '10rem', textAlign: "center" }} value={signupDate} onChange={(e) => {handleSignupDateChange(e.target.value)}} />
+                                    <Form.Control className="mx-auto mt-2" type="date" name='date_of_birth' style={{ maxWidth: '10rem', textAlign: "center" }} value={signupDate} onChange={(e) => {handleSignupDateChange(e.target.value)}} />
                                 </FloatingLabel>
+                                <Button className="mx-auto mt-2" style={{ maxWidth: '6rem', textAlign: "center", height: '40px' }} variant='outline-dark' onClick={handleSignupDateSubmit}>Set Date</Button>
                             </>)}
                         </div>)}
                     </Card.Body>
