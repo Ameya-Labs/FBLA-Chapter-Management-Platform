@@ -8,7 +8,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 
 import { fetchMeetingsStartAsync } from '../../store/meetings/meetings.action';
 import { selectMeetingsList, selectMeetingsListIsLoading } from '../../store/meetings/meetings.selector';
-import { selectCalendarEvents } from '../../store/db_store/db_store.selector';
+import { selectCalendarEvents, selectDBStoreIsLoading } from '../../store/db_store/db_store.selector';
 
 import { addEventToDBCalendar, deleteEventFromDBCalendar } from '../../utils/firebase/firebase.utils';
 
@@ -26,6 +26,8 @@ import {
 } from "react-bootstrap";
 
 import './calendar.styles.scss';
+
+import Spinner from '../Spinner/spinner.component';
 
 import APPLICATION_VARIABLES from '../../settings';
 
@@ -66,6 +68,7 @@ const Calendar = ({role}) => {
   const isMeetingsListLoading = useSelector(selectMeetingsListIsLoading);
 
   const master_calendar_events = useSelector(selectCalendarEvents);
+  const isDBStoreLoading = useSelector(selectDBStoreIsLoading);
 
   useEffect(() => {
     dispatch(fetchMeetingsStartAsync());
@@ -390,93 +393,100 @@ const Calendar = ({role}) => {
             </Form>
           </Modal>
 
-        <div className='calendar-view'>
-        <div className='calendar-configs'>
-          <label>
-            <input
-              type='checkbox'
-              checked={toggleWeekends}
-              onChange={() => {setToggleWeekends(!toggleWeekends)}}
-            ></input>
-            Toggle Weekends
-          </label>
-        </div>
-        <div className='calendar-app'>
-      
-          <FullCalendar
-            plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
-            headerToolbar={{
-              left: 'prev today next',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            }}
-            initialView="dayGridMonth"
-            displayEventEnd="true"
-            events={eventsData}
-            eventColor={APPLICATION_VARIABLES.CALENDAR_EVENT_COLOR}
-            themeSystem="simple"
-            //slotMinTime="07:00:00"
-            allDaySlot={false}
-            //contentHeight="auto"
-            slotEventOverlap={true}
-            nowIndicator={true}
-            scrollTime='07:00:00'
-            longPressDelay='20'
-         
-            selectable={role !== 'member'}
-            selectMirror={true}
-            dayMaxEvents={true}
-            weekends={toggleWeekends}
-            eventClick={async (e) => {
-              const fetched_event = await eventsData.find(event => event.id === e.event.id);
 
-              setCurrentCalendarEvent({
-                title: e.event.title,
-                start_date: fetched_event.start.split('T')[0],
-                start_time: fetched_event.start.split('T')[1].slice(0,5),
-                end_date: fetched_event.end.split('T')[0],
-                end_time: fetched_event.end.split('T')[1].slice(0,5),
-                id: e.event.id,
-                flag: fetched_event.flag,
-              });
+      {
+        isMeetingsListLoading || isDBStoreLoading ? <Spinner /> :
 
-              setAddDeleteFormType('Delete');
-              setShowAddForm(true);
-            }}
-            select={(e) => {
-              if (e.view.type === 'timeGridWeek') {
+      (
+
+          <div className='calendar-view'>
+          <div className='calendar-configs'>
+            <label>
+              <input
+                type='checkbox'
+                checked={toggleWeekends}
+                onChange={() => {setToggleWeekends(!toggleWeekends)}}
+              ></input>
+              Toggle Weekends
+            </label>
+          </div>
+          <div className='calendar-app'>
+        
+            <FullCalendar
+              plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
+              headerToolbar={{
+                left: 'prev today next',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+              }}
+              initialView="dayGridMonth"
+              displayEventEnd="true"
+              events={eventsData}
+              eventColor={APPLICATION_VARIABLES.CALENDAR_EVENT_COLOR}
+              themeSystem="simple"
+              //slotMinTime="07:00:00"
+              allDaySlot={false}
+              //contentHeight="auto"
+              slotEventOverlap={true}
+              nowIndicator={true}
+              scrollTime='07:00:00'
+              longPressDelay='20'
+          
+              selectable={role !== 'member'}
+              selectMirror={true}
+              dayMaxEvents={true}
+              weekends={toggleWeekends}
+              eventClick={async (e) => {
+                const fetched_event = await eventsData.find(event => event.id === e.event.id);
+
                 setCurrentCalendarEvent({
-                  ...currentCalendarEvent,
-                  start_date: e.startStr.split('T')[0],
-                  start_time: e.startStr.split('T')[1].slice(0,5),
-                  end_date: e.endStr.split('T')[0],
-                  end_time: e.endStr.split('T')[1].slice(0,5),
+                  title: e.event.title,
+                  start_date: fetched_event.start.split('T')[0],
+                  start_time: fetched_event.start.split('T')[1].slice(0,5),
+                  end_date: fetched_event.end.split('T')[0],
+                  end_time: fetched_event.end.split('T')[1].slice(0,5),
+                  id: e.event.id,
+                  flag: fetched_event.flag,
                 });
 
-              } else if (e.view.type === 'dayGridMonth') {
-                setCurrentCalendarEvent({
-                  ...currentCalendarEvent,
-                  start_date: e.startStr,
-                  end_date: e.startStr,
-                });
-              } else if (e.view.type === 'timeGridDay') {
-                setCurrentCalendarEvent({
-                  ...currentCalendarEvent,
-                  start_date: e.startStr.split('T')[0],
-                  start_time: e.startStr.split('T')[1].slice(0,5),
-                  end_date: e.endStr.split('T')[0],
-                  end_time: e.endStr.split('T')[1].slice(0,5),
-                });
-              }
-
-              if(role !== 'member') {
-                setAddDeleteFormType('Add');
+                setAddDeleteFormType('Delete');
                 setShowAddForm(true);
-              }
-            }}
-          />
+              }}
+              select={(e) => {
+                if (e.view.type === 'timeGridWeek') {
+                  setCurrentCalendarEvent({
+                    ...currentCalendarEvent,
+                    start_date: e.startStr.split('T')[0],
+                    start_time: e.startStr.split('T')[1].slice(0,5),
+                    end_date: e.endStr.split('T')[0],
+                    end_time: e.endStr.split('T')[1].slice(0,5),
+                  });
+
+                } else if (e.view.type === 'dayGridMonth') {
+                  setCurrentCalendarEvent({
+                    ...currentCalendarEvent,
+                    start_date: e.startStr,
+                    end_date: e.startStr,
+                  });
+                } else if (e.view.type === 'timeGridDay') {
+                  setCurrentCalendarEvent({
+                    ...currentCalendarEvent,
+                    start_date: e.startStr.split('T')[0],
+                    start_time: e.startStr.split('T')[1].slice(0,5),
+                    end_date: e.endStr.split('T')[0],
+                    end_time: e.endStr.split('T')[1].slice(0,5),
+                  });
+                }
+
+                if(role !== 'member') {
+                  setAddDeleteFormType('Add');
+                  setShowAddForm(true);
+                }
+              }}
+            />
+          </div>
         </div>
-      </div>
+        )}
       </div>
     )
 }

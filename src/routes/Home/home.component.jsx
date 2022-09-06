@@ -66,6 +66,18 @@ const DEFAULT_MEMBER_TO_SHOW = {
     memberGrade: "",
 };
 
+const DEFAULT_SIGNUP_ENABLE_DISABLE_FIELDS = {
+    member12: true,
+    member13: true,
+    member14: true,
+    member15: true,
+    member22: true,
+    member23: true,
+    member24: true,
+    member25: true,
+};
+
+
 const Home = () => {
     const [user, loading, error] = useAuthState(auth);
 
@@ -85,6 +97,8 @@ const Home = () => {
     const [signupActivationToggle, setSignupActivationToggle] = useState('');
     const [signupDate, setSignupDate] = useState("");
     const [resourcesLink, setResourcsLink] = useState("");
+    const [arrayOfSignupFieldEnableDisable, setArrayOfSignupFieldEnableDisable] = useState(DEFAULT_SIGNUP_ENABLE_DISABLE_FIELDS);
+    const [showErrorForMoreThan2Signups, setShowErrorForMoreThan2Signups] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -292,6 +306,10 @@ const Home = () => {
                 });
             }
 
+            if(users_signups.length > 2) {
+                setShowErrorForMoreThan2Signups(true);
+            }
+            
             if(users_signups.length===2) {     
                 await setEvent2Toggle(true);
                 
@@ -406,14 +424,17 @@ const Home = () => {
         await postToDBStore({ signupToggle: false, signupConf: "", signupDate: "" }).then(() => {
             toast.success('Disabled', TOAST_PROPS);
             setSignupActivationToggle('disable');
+            setSignupDate("");
         });
     };
 
     const handleSignupDateChange = async (inputtedSignUpDate) => {
-        await postSignupDateToDBStore(inputtedSignUpDate).then(() => {
-            toast.success('Saved date', TOAST_PROPS);
-            setSignupDate(inputtedSignUpDate);
-        });
+        // await postSignupDateToDBStore(inputtedSignUpDate).then(() => {
+        //     toast.success('Saved date', TOAST_PROPS);
+        //     setSignupDate(inputtedSignUpDate);
+        // });
+        console.log(inputtedSignUpDate)
+        setSignupDate(inputtedSignUpDate);
     };
 
     const handleEventChange = async (eventCall, selectedEvent) => {
@@ -427,25 +448,90 @@ const Home = () => {
         var fourthMemberId = "member" + eventCall + "4";
         var fifthMemberId = "member" + eventCall + "5";
 
+        const arrayCopy = arrayOfSignupFieldEnableDisable;
+
         if (fetchedEvent[0].TeamMemberLimit === "No Team") {
+            arrayCopy[secondMemberId] = true;
+            arrayCopy[thirdMemberId] = true;
+            arrayCopy[fourthMemberId] = true;
+            arrayCopy[fifthMemberId] = true;
+            // document.getElementById(secondMemberId).disabled = true;
+            // document.getElementById(thirdMemberId).disabled = true;
+            // document.getElementById(fourthMemberId).disabled = true;
+            // document.getElementById(fifthMemberId).disabled = true;
+        }
+        if (fetchedEvent[0].TeamMemberLimit === "3") {
+            arrayCopy[secondMemberId] = false;
+            arrayCopy[thirdMemberId] = false;
+            arrayCopy[fourthMemberId] = true;
+            arrayCopy[fifthMemberId] = true;
+            // document.getElementById(secondMemberId).disabled = false;
+            // document.getElementById(thirdMemberId).disabled = false;
+            // document.getElementById(fourthMemberId).disabled = true;
+            // document.getElementById(fifthMemberId).disabled = true;
+        }
+        if (fetchedEvent[0].TeamMemberLimit === "5") {
+            arrayCopy[secondMemberId] = false;
+            arrayCopy[thirdMemberId] = false;
+            arrayCopy[fourthMemberId] = false;
+            arrayCopy[fifthMemberId] = false;
+            // document.getElementById(secondMemberId).disabled = false;
+            // document.getElementById(thirdMemberId).disabled = false;
+            // document.getElementById(fourthMemberId).disabled = false;
+            // document.getElementById(fifthMemberId).disabled = false;
+        }
+
+        await setArrayOfSignupFieldEnableDisable(arrayCopy);
+
+    };
+
+
+    const handleEventChangeFromSignupChange = async (eventCall, selectedEvent) => {
+
+        const fetchedEvent = await master_events.filter(event => {
+            return event.Name === selectedEvent;
+        });
+
+        var secondMemberId = "member" + eventCall + "2";
+        var thirdMemberId = "member" + eventCall + "3";
+        var fourthMemberId = "member" + eventCall + "4";
+        var fifthMemberId = "member" + eventCall + "5";
+
+        const arrayCopy = arrayOfSignupFieldEnableDisable;
+
+        if (fetchedEvent[0].TeamMemberLimit === "No Team") {
+            arrayCopy[secondMemberId] = true;
+            arrayCopy[thirdMemberId] = true;
+            arrayCopy[fourthMemberId] = true;
+            arrayCopy[fifthMemberId] = true;
             document.getElementById(secondMemberId).disabled = true;
             document.getElementById(thirdMemberId).disabled = true;
             document.getElementById(fourthMemberId).disabled = true;
             document.getElementById(fifthMemberId).disabled = true;
         }
         if (fetchedEvent[0].TeamMemberLimit === "3") {
+            arrayCopy[secondMemberId] = false;
+            arrayCopy[thirdMemberId] = false;
+            arrayCopy[fourthMemberId] = true;
+            arrayCopy[fifthMemberId] = true;
             document.getElementById(secondMemberId).disabled = false;
             document.getElementById(thirdMemberId).disabled = false;
             document.getElementById(fourthMemberId).disabled = true;
             document.getElementById(fifthMemberId).disabled = true;
         }
         if (fetchedEvent[0].TeamMemberLimit === "5") {
+            arrayCopy[secondMemberId] = false;
+            arrayCopy[thirdMemberId] = false;
+            arrayCopy[fourthMemberId] = false;
+            arrayCopy[fifthMemberId] = false;
             document.getElementById(secondMemberId).disabled = false;
             document.getElementById(thirdMemberId).disabled = false;
             document.getElementById(fourthMemberId).disabled = false;
             document.getElementById(fifthMemberId).disabled = false;
         }
-    
+
+        await setArrayOfSignupFieldEnableDisable(arrayCopy);
+
     };
 
     const handleSignUpChange = (event) => {
@@ -454,10 +540,10 @@ const Home = () => {
         setSignups({...signups, [name]: value});
         
         if (name === "firstEvent") {
-            handleEventChange("1", value);
+            handleEventChangeFromSignupChange("1", value);
         }
         else if (name === "secondEvent") {
-            handleEventChange("2", value);
+            handleEventChangeFromSignupChange("2", value);
         }
     };
 
@@ -681,7 +767,8 @@ const Home = () => {
 
                     await setAddEditEvent1("Edit");
                     await setEvent2Toggle(true);
-                    window.location.reload(false)
+                    toast.success("Created new signup", TOAST_PROPS);
+                    //window.location.reload(false)
                 });
                 
             } else if (addEditEvent1 === "Edit") {
@@ -700,7 +787,9 @@ const Home = () => {
                 if (selected_event.TeamMemberLimit !== 'No Team') {
                     await updateSignupDoc(signupDoc).then(async () => {
                         await handleEditEmailSend(signupDoc);
-                        window.location.reload(false)
+                        toast.success("Edited signup", TOAST_PROPS);
+
+                        //window.location.reload(false)
                     }); // TODO NOTIFICATION
                 } else {
                     toast.error('Cannot edit an individual event.', TOAST_PROPS);
@@ -745,8 +834,10 @@ const Home = () => {
                 await createNewSignupDoc(signupDoc, additionalSignups).then(async () => {
                     await handleSubmitEmailSend(signupDoc);
 
-                    await setAddEditEvent2("Edit")
-                    window.location.reload(false)
+                    await setAddEditEvent2("Edit");
+                    toast.success("Created new signup", TOAST_PROPS);
+
+                    //window.location.reload(false)
                 });
             } else if (addEditEvent2 === "Edit") {
                 const signupDoc = {
@@ -764,7 +855,9 @@ const Home = () => {
                 if (selected_event.TeamMemberLimit !== 'No Team') {
                     await updateSignupDoc(signupDoc).then(async () => {
                         await handleEditEmailSend(signupDoc);
-                        window.location.reload(false);
+                        toast.success("Edited signup", TOAST_PROPS);
+
+                        //window.location.reload(false);
                     }); // TODO NOTIFICATION
                 } else {
                     toast.error('Cannot edit an individual event.', TOAST_PROPS);
@@ -813,6 +906,8 @@ const Home = () => {
                 
                 await updateSignupDoc(signupDoc).then(async () => {
                     await handleDeleteEmailSend(signupDoc);
+                    //toast.error("Removed yourself from the team", TOAST_PROPS);
+
                     window.location.reload(false)
                 });
                 // TODO show successful notification
@@ -851,6 +946,8 @@ const Home = () => {
                 
                 await updateSignupDoc(signupDoc).then(async () => {
                     await handleDeleteEmailSend(signupDoc);
+                    //toast.error("Removed yourself from the team", TOAST_PROPS);
+
                     window.location.reload(false)
                 });
                 // TODO show successful notification
@@ -870,7 +967,7 @@ const Home = () => {
             resolve("success");
          });
    
-         promise.then(() => {window.location.reload(false)});
+         //promise.then(() => {window.location.reload(false)});
     };
     
     const createDropdownItemToShow = async () => {
@@ -1030,7 +1127,8 @@ const Home = () => {
                         </div>
                         <Card.Text></Card.Text>
                         <CardGroup style={{ align: 'center', display: "flex", flexDirection: "row", justifyContent: 'center', alignContent: 'center', flexWrap: 'wrap' }}>
-                        <Card className="mb-2" bg="light" text="black" style={{ maxWidth: '30rem' }}>
+                        
+                        {!showErrorForMoreThan2Signups && (<Card className="mb-2" bg="light" text="black" style={{ maxWidth: '30rem' }}>
                             <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>Competitive Event #1</Card.Header>
                             <Card.Body>
 
@@ -1087,7 +1185,7 @@ const Home = () => {
                                     style={{textAlign: "left", width: "100%"}}
                                 >
                                     <Form.Select
-                                        disabled={true}
+                                        disabled={arrayOfSignupFieldEnableDisable.member12}
                                         value={signups.firstMember2}
                                         onChange={handleSignUpChange}
                                         name="firstMember2"
@@ -1123,7 +1221,7 @@ const Home = () => {
                                     style={{textAlign: "left", width: "100%"}}
                                 >
                                     <Form.Select
-                                        disabled={true}
+                                        disabled={arrayOfSignupFieldEnableDisable.member13}
                                         value={signups.firstMember3}
                                         onChange={handleSignUpChange}
                                         name="firstMember3"
@@ -1158,7 +1256,7 @@ const Home = () => {
                                     style={{textAlign: "left", width: "100%"}}
                                 >
                                     <Form.Select
-                                        disabled={true}
+                                        disabled={arrayOfSignupFieldEnableDisable.member14}
                                         value={signups.firstMember4}
                                         onChange={handleSignUpChange}
                                         name="firstMember4"
@@ -1193,7 +1291,7 @@ const Home = () => {
                                     style={{textAlign: "left", width: "100%"}}
                                 >
                                     <Form.Select
-                                        disabled={true}
+                                        disabled={arrayOfSignupFieldEnableDisable.member15}
                                         value={signups.firstMember5}
                                         onChange={handleSignUpChange}
                                         name="firstMember5"
@@ -1235,9 +1333,9 @@ const Home = () => {
                                 </div>
 
                             </Card.Body>
-                        </Card>
+                        </Card>)}
 
-                        {event2Toggle && (<Card className="mb-2" bg="light" text="black" style={{marginLeft: 10, maxWidth: '30rem' }}>
+                        {event2Toggle && !showErrorForMoreThan2Signups && (<Card className="mb-2" bg="light" text="black" style={{marginLeft: 10, maxWidth: '30rem' }}>
                             <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>Competitive Event #2</Card.Header>
                             <Card.Body>
 
@@ -1295,7 +1393,7 @@ const Home = () => {
                                     style={{textAlign: "left", width: "100%"}}
                                 >
                                     <Form.Select
-                                        disabled={true}
+                                        disabled={arrayOfSignupFieldEnableDisable.member22}
                                         value={signups.secondMember2}
                                         onChange={handleSignUpChange}
                                         name="secondMember2"
@@ -1331,7 +1429,7 @@ const Home = () => {
                                     style={{textAlign: "left", width: "100%"}}
                                 >
                                     <Form.Select
-                                        disabled={true}
+                                        disabled={arrayOfSignupFieldEnableDisable.member23}
                                         value={signups.secondMember3}
                                         onChange={handleSignUpChange}
                                         name="secondMember3"
@@ -1366,7 +1464,7 @@ const Home = () => {
                                     style={{textAlign: "left", width: "100%"}}
                                 >
                                     <Form.Select
-                                        disabled={true}
+                                        disabled={arrayOfSignupFieldEnableDisable.member24}
                                         value={signups.secondMember4}
                                         onChange={handleSignUpChange}
                                         name="secondMember4"
@@ -1401,7 +1499,7 @@ const Home = () => {
                                     style={{textAlign: "left", width: "100%"}}
                                 >
                                     <Form.Select
-                                        disabled={true}
+                                        disabled={arrayOfSignupFieldEnableDisable.member25}
                                         value={signups.secondMember5}
                                         onChange={handleSignUpChange}
                                         name="secondMember5"
@@ -1444,8 +1542,15 @@ const Home = () => {
                             </Card.Body>
                         </Card>)}
                         </CardGroup>
+
+                        {showErrorForMoreThan2Signups && (<>
+                            <hr />
+                            <p style={{color: 'red'}}><strong><i>You have more than two signups. Please see an officer or adviser.</i></strong></p>
+                            <hr />
+                        </>)}
                     </Card.Body>
                 </Card>)}
+                
 
                 {role !== "adviser" && !signupToggle && (<Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
                     <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>Event Signup</Card.Header>

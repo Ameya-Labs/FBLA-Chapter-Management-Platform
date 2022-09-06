@@ -325,7 +325,7 @@ const UserList = () => {
                     <Modal.Body>
                         {addEditFormType === "Add" && (
                         <>
-                            <p>Default password for new users is <i>{DEFAULT_PASSWORD}</i>. Users will be sent an email to change their password.</p>
+                            <p>{role && role === 'adviser' && (`Default password for new users is ${DEFAULT_PASSWORD}. `)}Users will be sent an email to change their password.</p>
                             <hr />
                         </>
                         )}
