@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import {Card, Dropdown, CardGroup, FloatingLabel, Form, Button, Badge, ButtonGroup, Modal, Col, Row} from "react-bootstrap";
+import {Card, CardGroup, FloatingLabel, Form, Button, Badge, Modal} from "react-bootstrap";
 
 import { postToDBStore, auth, createNewSignupDoc, updateSignupDoc, deleteSignupDoc, postSignupDateToDBStore } from "../../utils/firebase/firebase.utils";
 
@@ -282,7 +282,6 @@ const Home = () => {
 
         if (email) {
 
-
             if (signupConf && signupConf === "RLC") {
                 users_signups = await master_signups.filter(signup => {
                     return ((signup.member1 === email || signup.member2 === email || signup.member3 === email || signup.member4 === email || signup.member5 === email) && (signup.conf === "RLC" || signup.conf === "FLC"));
@@ -293,7 +292,9 @@ const Home = () => {
                 });
             }
 
-            if(users_signups.length===2) {            
+            if(users_signups.length===2) {     
+                await setEvent2Toggle(true);
+                
                 const first_signup = users_signups[0]
                 const second_signup = users_signups[1]
 
@@ -331,12 +332,15 @@ const Home = () => {
                 };
 
                 setSignups(event_signups);
+
+                await setAddEditEvent1("Edit");
+                await setAddEditEvent2("Edit");
+
                 await handleEventChange("1", first_signup.eventName);
                 await handleEventChange("2", second_signup.eventName);
+            } else if (users_signups.length===1) {    
+                await setEvent2Toggle(true);
                 
-                setAddEditEvent1("Edit");
-                setAddEditEvent2("Edit");
-            } else if (users_signups.length===1) {            
                 const first_signup = users_signups[0];
                 const signup_members = [first_signup.member1, first_signup.member2, first_signup.member3, first_signup.member4, first_signup.member5].filter(signup => {
                     return signup !== email
@@ -359,9 +363,9 @@ const Home = () => {
                 };
 
                 setSignups(event_signups);
+                await setAddEditEvent1("Edit");
 
                 await handleEventChange("1", first_signup.eventName);
-                setAddEditEvent1("Edit");
             }
             else {
                 var event_signups = {
