@@ -135,7 +135,7 @@ const Maintenance = () => {
             {role === "adviser" && (<>
               <Form.Check
                 inline
-                label="Allow Members to See Event Competitors"
+                label="Allow Members to See Their Event Competitors"
                 name="group1"
                 type='checkbox'
                 id='inline-checkbox-1'
@@ -153,7 +153,7 @@ const Maintenance = () => {
           <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>System Maintenance</Card.Header>
           <Card.Body>
             {role === "adviser" && (<>
-              <Button type="button" variant="danger" onClick={() => {setShowResetDialogue(true)}}>Reset System for New Year</Button>
+              <Button type="button" variant="danger" onClick={() => {setShowResetDialogue(true)}}>Reset System for New School Year</Button>
             </>)}
           </Card.Body>
         </Card>
