@@ -37,7 +37,7 @@ const APPLICATION_VARIABLES = {
   GENERAL_EMAIL_SUBJECT:"General Support for FBLA Chapter App",
 
   // Version
-  VERSION:"202209.04.22.13",
+  VERSION:"202209.07.22.13",
 
 }
 

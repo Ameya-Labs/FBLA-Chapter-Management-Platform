@@ -811,6 +811,34 @@ export const deleteEventFromDBCalendar = async (eventID) => {
     });
 };
 
+// Chapter Info Functions
+
+export const addQuickLinkToDB = async (quickLinkDoc) => {
+    const docSnap = await getDoc(doc(db, "db_store", "quick_links"));
+    var docData = docSnap.data();
+
+    await updateDoc(doc(db, "db_store", "quick_links"), {
+        quick_links: [...docData.quick_links, quickLinkDoc],
+    });
+};
+
+export const deleteQuickLinkFromDB = async (linkID) => {
+    const docSnap = await getDoc(doc(db, "db_store", "quick_links"));
+    var docDataLink = docSnap.data().quick_links;
+
+    var newLinks = [];
+
+    for (const existingLink of docDataLink) {
+        if (existingLink.id !== linkID) {
+            newLinks.push(existingLink);
+        }
+    }
+
+    await updateDoc(doc(db, "db_store", "quick_links"), {
+        quick_links: newLinks,
+    });
+};
+
 // RESET SYSTEM FUNCTIONS
 
 export const updateGradesForNewYear = async () => {

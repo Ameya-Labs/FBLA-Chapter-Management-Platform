@@ -223,7 +223,7 @@ const MeetingsList = () => {
         var new_URL = currentMeeting.url;
 
         if (new_URL.substring(0,4) === 'http') {
-            new_URL = `https://${new_URL.split('://')}`;
+            new_URL = `https://${new_URL.split('://')[1]}`;
         } else if (new_URL === '' || new_URL === ' ') {
             new_URL = "";
         } else {
@@ -345,8 +345,8 @@ const MeetingsList = () => {
                     <Modal.Title>Edit Meeting URL</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <FloatingLabel controlId="meetingLink" label="URL to Meeting Presentation/Notes" className="mb-3" >
-                        <Form.Control type='text' placeholder='URL to Meeting Presentation/Notes' size='md' value={currentMeeting.url} onChange={(e) => {
+                    <FloatingLabel controlId="meetingLink" label="URL to Meeting Link/Presentation/Notes" className="mb-3" >
+                        <Form.Control type='text' placeholder='URL to Meeting Link/Presentation/Notes' size='md' value={currentMeeting.url} onChange={(e) => {
                                 setCurrentMeeting({
                                     ...currentMeeting,
                                     url: e.target.value,

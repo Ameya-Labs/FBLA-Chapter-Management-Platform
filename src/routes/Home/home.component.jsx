@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { useAuthState } from "react-firebase-hooks/auth";
 
-import {Card, CardGroup, FloatingLabel, Form, Button, Badge, Modal, ButtonGroup} from "react-bootstrap";
+import {Card, CardGroup, FloatingLabel, Form, Button, Badge, Modal, ButtonGroup, Table} from "react-bootstrap";
 
 import { postToDBStore, auth, createNewSignupDoc, updateSignupDoc, deleteSignupDoc, postSignupDateToDBStore, db } from "../../utils/firebase/firebase.utils";
-import { collection, query, onSnapshot } from "firebase/firestore";
+import { collection, query, onSnapshot, doc } from "firebase/firestore";
 
 import { submittedNewEventEmail, editedEventEmail, deletedEventEmail } from "../../utils/emails/emails.utils";
 
@@ -29,6 +29,7 @@ import NavigationCard from '../../components/NavigationCard/navigation-card.comp
 import Spinner from '../../components/Spinner/spinner.component';
 import TotalCountCard from '../../components/TotalCardCount/total-card-count.component';
 import Calendar from '../../components/Calendar/calendar.component';
+import ChapterInfo from '../../components/ChapterInfo/chapter-info.component';
 
 import APPLICATION_VARIABLES from '../../settings';
 
@@ -591,6 +592,7 @@ const Home = () => {
             setEvent1Members(event1Members)
             setSignups({
                 ...signups,
+                firstEvent: selectedEvent,
                 firstMember1: email,
                 firstMember2: "",
                 firstMember3: "",
@@ -602,6 +604,7 @@ const Home = () => {
             setEvent2Members(event2Members);
             setSignups({
                 ...signups,
+                secondEvent: selectedEvent,
                 secondMember1: email,
                 secondMember2: "",
                 secondMember3: "",
@@ -940,21 +943,20 @@ const Home = () => {
             } else if (addEditEvent1 === "Edit") {
                 var completeAction = true;
 
+                var signupsMembers = [signups.firstMember2, signups.firstMember3, signups.firstMember4, signups.firstMember5];
+                signupsMembers.sort((a,b) => a ? b ? a.localeCompare(b) : -1 : 1);
+
                 const signupDoc = {
                     id: signups.firstEventID,
                     eventName: signups.firstEvent,
                     member1: signups.firstMember1,
-                    member2: signups.firstMember2,
-                    member3: signups.firstMember3,
-                    member4: signups.firstMember4,
-                    member5: signups.firstMember5,
+                    member2: signupsMembers[0],
+                    member3: signupsMembers[1],
+                    member4: signupsMembers[2],
+                    member5: signupsMembers[3],
                 };
 
                 const selected_event = await master_events.find(event => event.Name === signupDoc.eventName);
-
-
-                var signupsMembers = [signups.firstMember2, signups.firstMember3, signups.firstMember4, signups.firstMember5];
-                signupsMembers.sort((a,b) => a ? b ? a.localeCompare(b) : -1 : 1);
 
                 for (const memberEmail of signupsMembers) {
                     if (memberEmail) {
@@ -1096,20 +1098,20 @@ const Home = () => {
             } else if (addEditEvent2 === "Edit") {
                 var completeAction = true;
 
+                var signupsMembers = [signups.secondMember2, signups.secondMember3, signups.secondMember4, signups.secondMember5];
+                signupsMembers.sort((a,b) => a ? b ? a.localeCompare(b) : -1 : 1);
+
                 const signupDoc = {
                     id: signups.secondEventID,
                     eventName: signups.secondEvent,
                     member1: signups.secondMember1,
-                    member2: signups.secondMember2,
-                    member3: signups.secondMember3,
-                    member4: signups.secondMember4,
-                    member5: signups.secondMember5,
+                    member2: signupsMembers[0],
+                    member3: signupsMembers[1],
+                    member4: signupsMembers[2],
+                    member5: signupsMembers[3],
                 };
 
                 const selected_event = await master_events.find(event => event.Name === signupDoc.eventName);
-
-                var signupsMembers = [signups.secondMember2, signups.secondMember3, signups.secondMember4, signups.secondMember5];
-                signupsMembers.sort((a,b) => a ? b ? a.localeCompare(b) : -1 : 1);
 
                 for (const memberEmail of signupsMembers) {
                     if (memberEmail) {
@@ -1866,19 +1868,9 @@ const Home = () => {
                         </>)}
                     </Card.Body>
                 </Card>)}
-                
 
-                {role !== "adviser" && !signupToggle && (<Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
-                    <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>Event Signup</Card.Header>
-                    <Card.Body>
-                        <div>
-                            {resourcesLink && (<Button className="me-2" href={resourcesLink} variant="secondary" target='_blank'>Events Resources</Button>)}
-                            <Button href="/events-list" variant="secondary">Events List</Button>
-                        </div>
-                        <Card.Title className="mt-3">Event signups are not available.</Card.Title>
-                        <Card.Subtitle className="mb-2 text-muted">Please check back later.</Card.Subtitle>
-                    </Card.Body>
-                </Card>)}
+                <ChapterInfo master_users={master_users} />
+                
             </>)}
             
         
