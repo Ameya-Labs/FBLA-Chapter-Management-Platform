@@ -168,14 +168,14 @@ const MeetingsList = () => {
         var longitude = 0;
 
         if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
+            await navigator.geolocation.getCurrentPosition(showPosition);
         } else { 
             console.log("Geolocation is not supported by this browser.");
         }   
         
-        function showPosition(position) {
-            latitude = position.coords.latitude
-            longitude = position.coords.longitude
+        async function showPosition(position) {
+            latitude = await position.coords.latitude
+            longitude = await position.coords.longitude
         }
 
         var new_attendees = [...attendees, {email, location: new GeoPoint(latitude, longitude)}];
