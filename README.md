@@ -255,6 +255,7 @@ service cloud.firestore {
 
 [Ameya Jadhav](http://ameyajadhav.su.domains) of [Ameya Labs](https://www.linkedin.com/company/ameya-labs)
 
+[See other developers](https://github.com/Ameya-Labs/FBLA-Chapter-Management-Platform/blob/main/AUTHORS.txt)
 
 <br/><br/>
 ## License <a name = "license"></a>
