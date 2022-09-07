@@ -272,7 +272,8 @@ const MeetingsList = () => {
 
         const action = current_time_in_seconds >= start_time_in_seconds &&  current_time_in_seconds <= end_time_in_seconds;
         
-        await updateMeetingsAttendanceToggleBool(meetingID, action);
+        //await updateMeetingsAttendanceToggleBool(meetingID, action);
+        await updateMeetingsAttendanceToggleBool(meetingID, true);
 
         //return action; // true for active meeting, false for not active meeting
         return true; // true for active meeting, false for not active meeting
