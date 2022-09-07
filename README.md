@@ -9,7 +9,7 @@ FBLA Chapter Management Platform
   - Validation etc etc
 - Chapter meetings scheduler
 - Chapter meetings attendance platform
-- Calendar integration for chapter meetings and any events/conferences 
+- Calendar integration for chapter meetings and any events/conferences
 
 
 <br/><br/>
