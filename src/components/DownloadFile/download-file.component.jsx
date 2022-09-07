@@ -13,7 +13,7 @@ const DownloadFile = ({data, specialCode, specialType}) => {
   const signupsSortOrder = {'eventName': 1, 'conf': 2, 'member1': 3, 'member2': 4, 'member3': 5, 'member4': 6, 'member5': 7, 'promotedToSLC': 8, 'id': 9};
   const signupsPromotionSortOrder = {'eventName': 1, 'conf': 2, 'member1': 3, 'member2': 4, 'member3': 5, 'member4': 6, 'member5': 7, 'id': 8, 'promotedToSLC': 9};
   const paidMembersSortOrder = {'studentNum': 1, 'name': 2, 'email': 3};
-  const meetingsSortOrder = {'name': 1, 'date': 2, 'start_time': 3, 'end_time': 4, 'code': 5, 'attendeeCount': 6, 'attendees': 7};
+  const meetingsSortOrder = {'name': 1, 'date': 2, 'start_time': 3, 'end_time': 4, 'code': 5, 'url': 6, 'attendeeCount': 7, 'attendees': 8};
 
   useEffect(() => {
     const awaitFetch = async (collection) => {
@@ -34,6 +34,7 @@ const DownloadFile = ({data, specialCode, specialType}) => {
         }
         if (data === "meetings" && specialCode !== 'reset') {
           delete item.attendanceToggle;
+          delete item.flag;
           delete item.code;
           item.attendeeCount = item.attendees.length;
           delete item.attendees;

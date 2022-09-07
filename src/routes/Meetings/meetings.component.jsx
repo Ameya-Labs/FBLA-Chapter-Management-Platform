@@ -164,29 +164,40 @@ const MeetingsList = () => {
     }
 
     const handleMarkPresent = async (verifiedCode, id, attendees) => {
-        var latitude = 0;
-        var longitude = 0;
-
-        if (navigator.geolocation) {
-            await navigator.geolocation.getCurrentPosition(showPosition);
-        } else { 
-            console.log("Geolocation is not supported by this browser.");
-        }   
-        
-        async function showPosition(position) {
-            latitude = await position.coords.latitude
-            longitude = await position.coords.longitude
-        }
-
-        var new_attendees = [...attendees, {email, location: new GeoPoint(latitude, longitude)}];
 
         if (inputtedMeetingCode === verifiedCode) {
-            await updateMeetingAttendance(id, new_attendees).then(() => {
-                //window.location.reload(false)
-                toast.success(`Marked present`, TOAST_PROPS);
-            });
+            
+            if (!navigator.geolocation) {
+                console.log('Geolocation is not supported by your browser');
+            } else {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    var latitude = await position.coords.latitude
+                    var longitude = await position.coords.longitude
+
+                    var new_attendees = [...attendees, {email, location: new GeoPoint(latitude, longitude)}];
+
+                    await updateMeetingAttendance(id, new_attendees).then(() => {
+                        //window.location.reload(false)
+                        toast.success(`Marked present`, TOAST_PROPS);
+                        setInputtedMeetingCode('');
+                    });
+                }, async () => {
+                    var latitude = 0;
+                    var longitude = 0;
+
+                    var new_attendees = [...attendees, {email, location: new GeoPoint(latitude, longitude)}];
+
+                    await updateMeetingAttendance(id, new_attendees).then(() => {
+                        //window.location.reload(false)
+                        toast.success(`Marked present`, TOAST_PROPS);
+                        setInputtedMeetingCode('');
+                    });
+                });
+            }
+
         } else {
             toast.error('Incorrect meeting code', TOAST_PROPS);
+            setInputtedMeetingCode('');
         }
     }
 
@@ -272,11 +283,9 @@ const MeetingsList = () => {
 
         const action = current_time_in_seconds >= start_time_in_seconds && current_time_in_seconds <= end_time_in_seconds;
         
-        //await updateMeetingsAttendanceToggleBool(meetingID, action);
-        await updateMeetingsAttendanceToggleBool(meetingID, true);
+        await updateMeetingsAttendanceToggleBool(meetingID, action);
 
-        //return action; // true for active meeting, false for not active meeting
-        return true; // true for active meeting, false for not active meeting
+        return action; // true for active meeting, false for not active meeting
     };
 
 
@@ -467,7 +476,7 @@ const MeetingsList = () => {
                                         <td>{CountAttendees(meetingItem.attendees)}</td>
 
                                         {role !== 'adviser' && meetingItem.attendees && (<td>
-                                                {(meetingItem && meetingItem.attendanceToggle && (meetingItem.attendees && meetingItem.attendees.indexOf(email) === -1) && DetermineIfActiveMeeting(meetingItem.id, meetingItem.date, meetingItem.start_time, meetingItem.end_time)) && (<ButtonGroup>
+                                                {(meetingItem && meetingItem.attendanceToggle && (meetingItem.attendees && meetingItem.attendees.map(a => a.email).indexOf(email) === -1) && DetermineIfActiveMeeting(meetingItem.id, meetingItem.date, meetingItem.start_time, meetingItem.end_time)) && (<ButtonGroup>
                                                     <Form.Control
                                                         style={{maxWidth:'6rem'}}
                                                         required
@@ -489,7 +498,7 @@ const MeetingsList = () => {
                                                     </Button>
                                                 </ButtonGroup>)}        
 
-                                                {(meetingItem && meetingItem.attendees.indexOf(email) > -1) && (<>
+                                                {(meetingItem && meetingItem.attendees.map(a => a.email).indexOf(email) > -1) && (<>
                                                     <p style={{color: APPLICATION_VARIABLES.MEETING_IN_ATTENDANCE_COLOR}}><strong>In Attendance</strong></p>
                                                 </>)}     
                                         </td>)}
