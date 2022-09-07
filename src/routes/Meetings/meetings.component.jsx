@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
 
 import { auth, createNewMeetingDoc, updateMeetingsAttendanceToggleBool, deleteMeetingDoc, deleteAllMeetings, updateMeetingAttendance, postMeetingURL, db } from "../../utils/firebase/firebase.utils";
-import { collection, query, onSnapshot } from "firebase/firestore";
+import { collection, query, onSnapshot, GeoPoint } from "firebase/firestore";
 
 import { fetchMeetingsStartAsync } from '../../store/meetings/meetings.action';
 
@@ -84,18 +84,6 @@ const MeetingsList = () => {
     //     dispatch(fetchMeetingsStartAsync());
     // }, []);
 
-    useEffect(() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else { 
-            console.log("Geolocation is not supported by this browser.");
-        }   
-        
-        function showPosition(position) {
-            console.log(position.coords.latitude)
-            console.log(position.coords.longitude)
-        }
-    }, []);
 
     useEffect(() => {
         setIsMeetingsListLoading(true);
@@ -167,7 +155,21 @@ const MeetingsList = () => {
     }
 
     const handleMarkPresent = async (verifiedCode, id, attendees) => {
-        var new_attendees = [...attendees, email];
+        var latitude = 0;
+        var longitude = 0;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+            console.log("Geolocation is not supported by this browser.");
+        }   
+        
+        function showPosition(position) {
+            latitude = position.coords.latitude
+            longitude = position.coords.longitude
+        }
+
+        var new_attendees = [...attendees, {email, location: GeoPoint(latitude, longitude)}];
 
         if (inputtedMeetingCode === verifiedCode) {
             await updateMeetingAttendance(id, new_attendees).then(() => {window.location.reload(false)});
