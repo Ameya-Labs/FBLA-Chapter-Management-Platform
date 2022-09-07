@@ -3,7 +3,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
 
-import { auth, createNewMeetingDoc, updateMeetingsAttendanceToggleBool, deleteMeetingDoc, deleteAllMeetings, updateMeetingAttendance } from "../../utils/firebase/firebase.utils";
+import { auth, createNewMeetingDoc, updateMeetingsAttendanceToggleBool, deleteMeetingDoc, deleteAllMeetings, updateMeetingAttendance, postMeetingURL, db } from "../../utils/firebase/firebase.utils";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
 import { fetchMeetingsStartAsync } from '../../store/meetings/meetings.action';
 
@@ -19,6 +20,7 @@ import {
     Modal,
     Form,
     ButtonGroup,
+    FloatingLabel
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -35,7 +37,7 @@ import APPLICATION_VARIABLES from '../../settings';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const TOAST_PROPS = {
-    position: "top-right",
+    position: "bottom-center",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -53,6 +55,7 @@ const defaultCurrentMeetingFields = {
     attendees: [],
     attendanceToggle: false,
     id: "",
+    url: "",
 };
 
 const MeetingsList = () => {
@@ -65,18 +68,57 @@ const MeetingsList = () => {
     const [allDeleteToggle, setAllDeleteToggle] = useState(false);
     const [showAllDeleteDialogue, setShowAllDeleteDialogue] = useState(false);
     const [meetings, setMeetings] = useState([]);
+    const [master_meetings, setMasterMeetings] = useState([]);
+    const [isMeetingsListLoading, setIsMeetingsListLoading] = useState(true);
+    const [showMeetingLinkModal, setShowMeetingLinkModal] = useState(false);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const { role, email, name } = useSelector(selectCurrentUser);
 
-    const master_meetings = useSelector(selectMeetingsList);
-    const isMeetingsListLoading = useSelector(selectMeetingsListIsLoading);
+    // const master_meetings = useSelector(selectMeetingsList);
+    // const isMeetingsListLoading = useSelector(selectMeetingsListIsLoading);
+
+    // useEffect(() => {
+    //     dispatch(fetchMeetingsStartAsync());
+    // }, []);
 
     useEffect(() => {
-        dispatch(fetchMeetingsStartAsync());
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else { 
+            console.log("Geolocation is not supported by this browser.");
+        }   
+        
+        function showPosition(position) {
+            console.log(position.coords.latitude)
+            console.log(position.coords.longitude)
+        }
     }, []);
+
+    useEffect(() => {
+        setIsMeetingsListLoading(true);
+
+        const q = query(collection(db, "meetings"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const meetingsList = [];
+            querySnapshot.forEach((doc) => {
+                meetingsList.push(doc.data());
+            });
+
+            setMasterMeetings(meetingsList);
+        });
+
+        return unsubscribe
+    }, []);
+
+    useEffect(() => {
+        if (master_meetings) {
+            setIsMeetingsListLoading(false);
+        }
+    }, [master_meetings]);
+
 
     useEffect(() => {
         const sorted_meetings = master_meetings.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -92,6 +134,7 @@ const MeetingsList = () => {
     const handleModalClose = () => {
         setCurrentMeeting(defaultCurrentMeetingFields);
         setShowDeleteDialogue(false);
+        setShowMeetingLinkModal(false);
     };
 
     const handleAddNewMeeting = async () => {
@@ -148,7 +191,25 @@ const MeetingsList = () => {
         });
 
         handleAllDeleteModalClose();
-    }
+    };
+
+    const handleMeetingURLUpdate = async () => {
+        const id = currentMeeting.id;
+        var new_URL = currentMeeting.url;
+
+        if (new_URL.substring(0,4) === 'http') {
+            new_URL = `https://${new_URL.split('://')}`;
+        } else if (new_URL === '' || new_URL === ' ') {
+            new_URL = "";
+        } else {
+            new_URL = `https://${new_URL}`;
+        }
+
+        await postMeetingURL(id, new_URL).then(() => {
+            toast.success('Updated URL', TOAST_PROPS);
+            handleModalClose();
+        })
+    };
 
     function CountAttendees(attendeesArray){
         if (attendeesArray) {
@@ -202,6 +263,8 @@ const MeetingsList = () => {
         return action; // true for active meeting, false for not active meeting
     };
 
+
+
     return (
         <div>
             <Header />
@@ -249,6 +312,25 @@ const MeetingsList = () => {
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleAllDeleteModalClose}>Cancel</Button>
                     <Button variant="danger" onClick={handleAllMeetingsDelete}>Yes, Delete All</Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showMeetingLinkModal} onHide={handleModalClose} size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Meeting URL</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <FloatingLabel controlId="meetingLink" label="URL to Meeting Presentation/Notes" className="mb-3" >
+                        <Form.Control type='text' placeholder='URL to Meeting Presentation/Notes' size='md' value={currentMeeting.url} onChange={(e) => {
+                                setCurrentMeeting({
+                                    ...currentMeeting,
+                                    url: e.target.value,
+                                });
+                            }} />
+                    </FloatingLabel>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="success" onClick={handleMeetingURLUpdate}>Save</Button>
                 </Modal.Footer>
             </Modal>
             
@@ -361,7 +443,7 @@ const MeetingsList = () => {
                                     // TODO center text in row
                                     <tr key={index} className="" >
                                         <td>{index + 1}</td>
-                                        <td>{meetingItem.name}</td>
+                                        <td>{ meetingItem.url ? (<a href={`${meetingItem.url}`} target="_blank">{meetingItem.name}</a>) : meetingItem.name}</td>
                                         <td>{ConvertToReadableDate(meetingItem.date)}</td>
                                         <td>{ConvertToReadableTime(meetingItem.start_time)}</td>
                                         <td>{ConvertToReadableTime(meetingItem.end_time)}</td>
@@ -418,6 +500,23 @@ const MeetingsList = () => {
 
                                                     <Button
                                                         className="mx-1"
+                                                        variant="outline-primary"
+                                                        disabled={false}
+                                                        onClick={() => {
+                                                            setCurrentMeeting({
+                                                                ...currentMeeting,
+                                                                id: meetingItem.id,
+                                                                url: meetingItem.url,
+                                                            });
+
+                                                            setShowMeetingLinkModal(true);
+                                                        }}
+                                                    >
+                                                        Edit URL
+                                                    </Button>
+
+                                                    <Button
+                                                        className="mx-1"
                                                         variant="outline-danger"
                                                         disabled={false}
                                                         onClick={() => {
@@ -469,6 +568,7 @@ const MeetingsList = () => {
                 <Card.Footer className="d-flex justify-content-between align-items-center">
                     {(role === "adviser") && <p className="mt-3 text-sm text-slate-400">Adviser Only Access</p>}
                     {(role === "officer") && <p className="mt-3 text-sm text-slate-400">Officer Only Access</p>}
+                    {(role === "member") && <p className="mt-3 text-sm text-slate-400">Member Only Access</p>}
                     {role === 'adviser' && (<div className="d-flex justify-content-between align-items-center text-right pull-right">
                         <Form>
                             <Form.Check 

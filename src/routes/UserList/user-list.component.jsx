@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
-import { auth, sendPasswordReset, updateUserDoc, createUserDoc, deleteUserDoc, updatePaidMemberCreatedAccountBool } from "../../utils/firebase/firebase.utils";
+import { auth, sendPasswordReset, updateUserDoc, createUserDoc, deleteUserDoc, updatePaidMemberCreatedAccountBool, db } from "../../utils/firebase/firebase.utils";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
 import { selectCurrentUser } from '../../store/user/user.selector';
 import { selectUsersList, selectUsersListIsLoading } from '../../store/users_list/users-list.selector';
@@ -34,7 +35,7 @@ import APPLICATION_VARIABLES from '../../settings';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const TOAST_PROPS = {
-    position: "top-right",
+    position: "bottom-center",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -66,6 +67,10 @@ const UserList = () => {
     const [showCSVUpload, setShowCSVUpload] = useState(false);
     const [users, setUsers] = useState();
     const [selectedRadio, setSelectedRadio] = useState("student");
+    const [users_data, setUsersData] = useState([]);
+    const [isUsersListLoading, setIsUsersListLoading] = useState(true);
+    const [paid_members, setPaidMembers] = useState([]);
+    const [isPaidMembersLoading, setIsPaidMembersLoading] = useState(true);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -73,21 +78,73 @@ const UserList = () => {
 
     const { role } = useSelector(selectCurrentUser);
 
-    const users_data = useSelector(selectUsersList);
-    const isUsersListLoading = useSelector(selectUsersListIsLoading);
+    // const users_data = useSelector(selectUsersList);
+    // const isUsersListLoading = useSelector(selectUsersListIsLoading);
 
-    const paid_members = useSelector(selectPaidMembersList);
-    const isPaidMembersLoading = useSelector(selectPaidMembersListIsLoading);
+    // const paid_members = useSelector(selectPaidMembersList);
+    // const isPaidMembersLoading = useSelector(selectPaidMembersListIsLoading);
 
     const DEFAULT_PASSWORD = APPLICATION_VARIABLES.DEFAULT_PASSWORD;
 
-    useEffect(() => {
-        dispatch(fetchPaidMembersStartAsync());
-    }, []);
+    // useEffect(() => {
+    //     dispatch(fetchPaidMembersStartAsync());
+    // }, []);
+
+    // useEffect(() => {
+    //     dispatch(fetchUsersListStartAsync());
+    // }, []);
 
     useEffect(() => {
-        dispatch(fetchUsersListStartAsync());
+        setIsUsersListLoading(true);
+
+        const q = query(collection(db, "users"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const users = [];
+            querySnapshot.forEach((doc) => {
+                users.push(doc.data());
+            });
+
+            setUsersData(users);
+        });
+
+        return unsubscribe
     }, []);
+
+
+    useEffect(() => {
+        if (users_data) {
+            setIsUsersListLoading(false);
+        }
+    }, [users_data]);
+
+
+
+    useEffect(() => {
+        setIsPaidMembersLoading(true);
+
+        const q = query(collection(db, "paid_members"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const paid_members_list = [];
+            querySnapshot.forEach((doc) => {
+                paid_members_list.push(doc.data());
+            });
+
+            setPaidMembers(paid_members_list);
+        });
+
+        return unsubscribe
+    }, []);
+
+
+
+    useEffect(() => {
+        if (paid_members) {
+            setIsPaidMembersLoading(false);
+        }
+    }, [paid_members]);
+
+
+
 
     useEffect(() => {
         if (loading) return;
@@ -178,13 +235,15 @@ const UserList = () => {
                                 updatePaidMemberCreatedAccountBool(studentNum, true).then(() => {
                                     sendPasswordReset(email).then(() => {
                                         setShowSpinner(false);
-                                        window.location.reload(false);
+                                        toast.success("Created student account", TOAST_PROPS);
+                                        //window.location.reload(false);
                                     })
                                 });
                             } else {
                                 sendPasswordReset(email).then(() => {
                                     setShowSpinner(false);
-                                    window.location.reload(false);
+                                    toast.success("Created adviser account", TOAST_PROPS);
+                                    //window.location.reload(false);
                                 })
                             }
                         });
@@ -213,7 +272,10 @@ const UserList = () => {
                     studentNum,
                 };
         
-                updateUserDoc(userDoc).then(() => {window.location.reload(false)});
+                updateUserDoc(userDoc).then(() => {
+                    toast.success("Edited account", TOAST_PROPS);
+                    //window.location.reload(false)
+                });
 
                 //alert(`${userEmail.value} is successfully updated.`);
                 handleModalClose();
@@ -249,11 +311,13 @@ const UserList = () => {
                 if (currentUser.role !== "adviser") {
                 updatePaidMemberCreatedAccountBool(studentNum, false).then(() => {
                     setShowSpinner(false);
-                    window.location.reload(false);
+                    toast.success("Deleted student account", TOAST_PROPS);
+                    //window.location.reload(false);
                 }).catch((error) => (console.log(error)));
                 } else {
                     setShowSpinner(false);
-                    window.location.reload(false);
+                    toast.success("Deleted adviser account", TOAST_PROPS);
+                    //window.location.reload(false);
                 }
             });
         })
@@ -832,9 +896,8 @@ const UserList = () => {
                     </Table>
                 </Card.Body>
                 <Card.Footer className="d-flex justify-content-between align-items-center">
-                    <p className="mt-3 text-sm text-slate-400">
-                        Adviser Only Access
-                    </p>
+                    {(role === "adviser") && <p className="mt-3 text-sm text-slate-400">Adviser Only Access</p>}
+                    {(role === "officer") && <p className="mt-3 text-sm text-slate-400">Officer Only Access</p>}                    
                 </Card.Footer>
             </Card>
             }

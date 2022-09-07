@@ -211,6 +211,12 @@ export const postEventResourcesURL = async (new_URL) => {
     });
 };
 
+export const postMeetingURL = async (id, new_URL) => {
+    await updateDoc(doc(db, "meetings", id), {
+        url: new_URL,
+    });
+};
+
 export const createNewEventDoc = async (eventDoc) => {
     await setDoc(doc(db, "events", eventDoc.Name), {
         Category: eventDoc.Category,

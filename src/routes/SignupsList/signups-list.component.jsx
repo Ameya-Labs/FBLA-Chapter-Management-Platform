@@ -5,7 +5,8 @@ import {useNavigate} from "react-router-dom";
 
 import { Table, Card, Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
 
-import { auth, deleteSignupDoc, updateSignupDoc, promoteSignupDocToSLC, deleteAllSignups, demoteSignupDoc } from "../../utils/firebase/firebase.utils";
+import { auth, deleteSignupDoc, updateSignupDoc, promoteSignupDocToSLC, deleteAllSignups, demoteSignupDoc, db } from "../../utils/firebase/firebase.utils";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
 import { selectCurrentUser } from '../../store/user/user.selector';
 import { selectSignups, selectSignupsIsLoading } from '../../store/signups/signups.selector';
@@ -30,7 +31,7 @@ import APPLICATION_VARIABLES from '../../settings';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const TOAST_PROPS = {
-    position: "top-right",
+    position: "bottom-center",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -63,13 +64,16 @@ const SignupsList = () => {
     const [allDeleteToggle, setAllDeleteToggle] = useState(false);
     const [showCSVUpload, setShowCSVUpload] = useState(false);
     const [signupsForMemberView, setSignupsForMemberView] = useState([]);
+    const [master_signups, setMasterSignups] = useState([]);
+    const [isSignupsLoading, setIsSignupsLoading] = useState(true);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const { role, email } = useSelector(selectCurrentUser);
-    const master_signups = useSelector(selectSignups);
-    const isSignupsLoading = useSelector(selectSignupsIsLoading);
+
+    // const master_signups = useSelector(selectSignups);
+    // const isSignupsLoading = useSelector(selectSignupsIsLoading);
 
     const master_events = useSelector(selectEvents);
     const isEventLoading = useSelector(selectEventsIsLoading);
@@ -81,9 +85,32 @@ const SignupsList = () => {
 
     const signups = master_signups;
 
+
+    // useEffect(() => {
+    //     dispatch(fetchSignupsStartAsync());
+    // }, []);
+
     useEffect(() => {
-        dispatch(fetchSignupsStartAsync());
+        setIsSignupsLoading(true);
+
+        const q = query(collection(db, "signups"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const signups = [];
+            querySnapshot.forEach((doc) => {
+                signups.push(doc.data());
+            });
+
+            setMasterSignups(signups);
+        });
+
+        return unsubscribe
     }, []);
+
+    useEffect(() => {
+        if (master_signups) {
+            setIsSignupsLoading(false);
+        }
+    }, [master_signups])
 
     useEffect(() => {
         dispatch(fetchEventsStartAsync());
@@ -152,7 +179,7 @@ const SignupsList = () => {
             inHouseRequired,
         };
 
-        await deleteSignupDoc(signupDoc, additionalSignups).then(() => {window.location.reload(false)});
+        await deleteSignupDoc(signupDoc, additionalSignups).then(() => {toast.error('Deleted', TOAST_PROPS)});
         //alert(`Deletion Successful`);
         handleModalClose();
     }
@@ -176,14 +203,14 @@ const SignupsList = () => {
     }
 
     const handleSLCPromotion = async (id) => {
-        await promoteSignupDocToSLC(id).then(() => {window.location.reload(false)});
+        await promoteSignupDocToSLC(id).then(() => {toast.success('Promoted', TOAST_PROPS)});
     };
 
     const handleSignupDemotion = async (id, eventName) => {
         var filtered_event = master_events.find((event) => event.Name === eventName);
         var conf = filtered_event.Conference;
         
-        await demoteSignupDoc(id, conf).then(() => {window.location.reload(false)});
+        await demoteSignupDoc(id, conf).then(() => {toast.success('Demoted', TOAST_PROPS)});
     };
 
     function convertEmailToMemberName(email) {
@@ -195,12 +222,13 @@ const SignupsList = () => {
     function findEvent(rowEvent) {
         var filtered_event = master_events.find((event) => event.Name === rowEvent.eventName)
 
-        return `${filtered_event.Conference}`;
+        return filtered_event;
     };
 
     const handleCSVModalClose = () => {
         setShowCSVUpload(false);
     };
+
 
     return (
         <div>
@@ -301,7 +329,7 @@ const SignupsList = () => {
                             {(signups) && (signups.map((signupItem, index) => (
                                 <tr key={index} id={signupItem.id} className={signupItem.inHouseRequired ? 'marked' : ''}>
                                     <td>{index + 1}</td>
-                                    <td>{signupItem.eventName}</td>
+                                    <td>{ findEvent(signupItem).TeamMemberLimit === 'No Team' ? signupItem.eventName : `${signupItem.eventName} (Team)` }</td>
                                     <td>{signupItem.conf}</td>
                                     <td>{ signupItem.member1 === "" ? "-" : convertEmailToMemberName(signupItem.member1) }</td>
                                     <td>{ signupItem.member2 === "" ? "-" : convertEmailToMemberName(signupItem.member2) }</td>
@@ -323,7 +351,7 @@ const SignupsList = () => {
                                         (
                                             <Button variant='outline-primary' onClick={() => {
                                                 handleSignupDemotion(signupItem.id, signupItem.eventName);
-                                            }}>Demote To {findEvent(signupItem)}</Button>
+                                            }}>Demote To {findEvent(signupItem).Conference}</Button>
                                         )
                                         }
                                         {/* <Button variant='primary' onClick={() => {
@@ -416,7 +444,7 @@ const SignupsList = () => {
                                     {(signupsForMemberView) && (signupsForMemberView.map((signupItem, index) => (
                                             <tr key={`member-${index}`} className={signupItem.inHouseRequired ? 'marked' : ''}>
                                                 <td>{index + 1}</td>
-                                                <td>{signupItem.eventName}</td>
+                                                <td>{ findEvent(signupItem).TeamMemberLimit === 'No Team' ? signupItem.eventName : `${signupItem.eventName} (Team)` }</td>
                                                 <td>{signupItem.conf}</td>
                                                 <td>{ signupItem.member1 === "" ? "-" : convertEmailToMemberName(signupItem.member1) }</td>
                                                 <td>{ signupItem.member2 === "" ? "-" : convertEmailToMemberName(signupItem.member2) }</td>

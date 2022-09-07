@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { Table, Card, Button, Modal, Form, FloatingLabel } from 'react-bootstrap';
 
-import { createNewEventDoc, updateEventDoc, deleteEventDoc, postEventResourcesURL } from "../../utils/firebase/firebase.utils";
+import { createNewEventDoc, updateEventDoc, deleteEventDoc, postEventResourcesURL, db } from "../../utils/firebase/firebase.utils";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
 import { selectCurrentUser } from '../../store/user/user.selector';
 import { selectEvents, selectEventsIsLoading } from '../../store/events/events.selector';
@@ -25,7 +26,7 @@ import './events-list.styles.scss';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const TOAST_PROPS = {
-    position: "top-right",
+    position: "bottom-center",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -53,25 +54,80 @@ const EventsList = () => {
     const [markedRows, setMarkedRows] = useState([]);
     const [showResourcesLinkEditModal, setShowResourcesLinkEditModal] = useState(false);
     const [resourcesURL, setResourcesURL] = useState('');
+    const [master_signups, setMasterSignups] = useState([]);
+    const [isSignupsLoading, setIsSignupsLoading] = useState(true);
+    const [events, setEvents] = useState([]);
+    const [isEventLoading, setIsEventLoading] = useState(true);
 
     const dispatch = useDispatch();
 
     const { role } = useSelector(selectCurrentUser);
-    const events = useSelector(selectEvents);
-    const isEventLoading = useSelector(selectEventsIsLoading);
+    
+    // const events = useSelector(selectEvents);
+    // const isEventLoading = useSelector(selectEventsIsLoading);
 
-    const master_signups = useSelector(selectSignups);
-    const isSignupsLoading = useSelector(selectSignupsIsLoading);
+    // const master_signups = useSelector(selectSignups);
+    // const isSignupsLoading = useSelector(selectSignupsIsLoading);
 
     const db_eventResourcesURL = useSelector(selectEventResourcesURL);
 
+    // useEffect(() => {
+    //     dispatch(fetchEventsStartAsync());
+    // }, []);
+
+    // useEffect(() => {
+    //     dispatch(fetchSignupsStartAsync());
+    // }, []);
+
+
     useEffect(() => {
-        dispatch(fetchEventsStartAsync());
+        setIsSignupsLoading(true);
+
+        const q = query(collection(db, "signups"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const signups = [];
+            querySnapshot.forEach((doc) => {
+                signups.push(doc.data());
+            });
+
+            setMasterSignups(signups);
+        });
+
+        return unsubscribe
     }, []);
 
     useEffect(() => {
-        dispatch(fetchSignupsStartAsync());
+        if (master_signups) {
+            setIsSignupsLoading(false);
+        }
+    }, [master_signups]);
+
+
+    useEffect(() => {
+        setIsEventLoading(true);
+
+        const q = query(collection(db, "events"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const eventsList = [];
+            querySnapshot.forEach((doc) => {
+                eventsList.push(doc.data());
+            });
+
+            setEvents(eventsList);
+        });
+
+        return unsubscribe
     }, []);
+
+    useEffect(() => {
+        if (events) {
+            setIsEventLoading(false);
+        }
+    }, [events]);
+
+
+
+
 
     useEffect(() => {
         if (db_eventResourcesURL) {

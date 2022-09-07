@@ -5,7 +5,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 import {Card, CardGroup, FloatingLabel, Form, Button, Badge, Modal, ButtonGroup} from "react-bootstrap";
 
-import { postToDBStore, auth, createNewSignupDoc, updateSignupDoc, deleteSignupDoc, postSignupDateToDBStore } from "../../utils/firebase/firebase.utils";
+import { postToDBStore, auth, createNewSignupDoc, updateSignupDoc, deleteSignupDoc, postSignupDateToDBStore, db } from "../../utils/firebase/firebase.utils";
+import { collection, query, onSnapshot } from "firebase/firestore";
 
 import { submittedNewEventEmail, editedEventEmail, deletedEventEmail } from "../../utils/emails/emails.utils";
 
@@ -34,7 +35,7 @@ import APPLICATION_VARIABLES from '../../settings';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const TOAST_PROPS = {
-    position: "top-right",
+    position: "bottom-center",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -99,6 +100,10 @@ const Home = () => {
     const [resourcesLink, setResourcsLink] = useState("");
     const [arrayOfSignupFieldEnableDisable, setArrayOfSignupFieldEnableDisable] = useState(DEFAULT_SIGNUP_ENABLE_DISABLE_FIELDS);
     const [showErrorForMoreThan2Signups, setShowErrorForMoreThan2Signups] = useState(false);
+    const [event1Members, setEvent1Members] = useState([]);
+    const [event2Members, setEvent2Members] = useState([]);
+    const [master_signups, setMasterSignups] = useState([]);
+    const [isSignupsLoading, setIsSignupsLoading] = useState(true);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -111,8 +116,8 @@ const Home = () => {
     const master_events = useSelector(selectEvents);
     const isEventLoading = useSelector(selectEventsIsLoading);
 
-    const master_signups = useSelector(selectSignups);
-    const isSignupsLoading = useSelector(selectSignupsIsLoading);
+    // const master_signups = useSelector(selectSignups);
+    // const isSignupsLoading = useSelector(selectSignupsIsLoading);
     
     const isDBStoreLoading = useSelector(selectDBStoreIsLoading);
     const signupConf = useSelector(selectSignupConf);
@@ -132,9 +137,32 @@ const Home = () => {
         dispatch(fetchUsersListStartAsync());
     }, []);
 
+    // useEffect(() => {
+    //     dispatch(fetchSignupsStartAsync());
+    // }, []);
+
     useEffect(() => {
-        dispatch(fetchSignupsStartAsync());
+        setIsSignupsLoading(true);
+
+        const q = query(collection(db, "signups"));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const signups = [];
+            querySnapshot.forEach((doc) => {
+                signups.push(doc.data());
+            });
+
+            setMasterSignups(signups);
+        });
+
+        return unsubscribe
     }, []);
+
+    useEffect(() => {
+        if (master_signups) {
+            setIsSignupsLoading(false);
+        }
+    }, [master_signups]);
+
 
     useEffect(() => {
         dispatch(fetchPaidMembersStartAsync());
@@ -171,7 +199,7 @@ const Home = () => {
             users_path: "/user-list",
             paid_members_data: master_paid_members,
             paid_members_path: "/paid-members-list",
-        }
+        };
 
         setDataForStatBar(count_Data_OBJ);
     }, [master_signups, master_events, master_users, master_paid_members]);
@@ -308,9 +336,7 @@ const Home = () => {
 
             if(users_signups.length > 2) {
                 setShowErrorForMoreThan2Signups(true);
-            }
-            
-            if(users_signups.length===2) {     
+            } else if(users_signups.length===2) {     
                 await setEvent2Toggle(true);
                 
                 const first_signup = users_signups[0]
@@ -354,6 +380,8 @@ const Home = () => {
                 await setAddEditEvent1("Edit");
                 await setAddEditEvent2("Edit");
 
+                await fetchMembers();
+
                 await handleEventChange("1", first_signup.eventName);
                 await handleEventChange("2", second_signup.eventName);
             } else if (users_signups.length===1) {    
@@ -369,7 +397,7 @@ const Home = () => {
                 }
 
                 var event_signups = {
-                    ...DEFAULT_EVENT_SIGNUP_FIELDS,
+                    ...signups,
                     firstEvent: first_signup.eventName,
                     firstMember1: email,
                     firstMember2: signup_members[0],
@@ -383,16 +411,19 @@ const Home = () => {
                 setSignups(event_signups);
                 await setAddEditEvent1("Edit");
 
+                await fetchMembers();
+
                 await handleEventChange("1", first_signup.eventName);
             }
             else {
                 var event_signups = {
-                    ...DEFAULT_EVENT_SIGNUP_FIELDS,
+                    ...signups,
                     firstMember1: email,
                     secondMember1: email,
                 };
 
                 setEvent2Toggle(false);
+                setAddEditEvent1("Add");
                 setSignups(event_signups);
             }
         }
@@ -449,6 +480,42 @@ const Home = () => {
             return event.Name === selectedEvent;
         });
 
+        // handle dropdown member changing - removing members from dropdowns if they have the same event signed up already
+
+        // if (eventCall === '1') {
+        //     var event1Members = []
+        // } else if (eventCall === '2') {
+        //     var event2Members = []
+        // }
+         
+        // for (const member of members) {
+        //     var members_signups = await master_signups.filter(signup => {
+        //         return ((signup.member1 === member.email || signup.member2 === member.email || signup.member3 === member.email || signup.member4 === member.email || signup.member5 === member.email) && (signup.conf === signupConf));
+        //     });
+
+        //     var memberEvents = members_signups.map(a => a.eventName);
+              
+        //     if (memberEvents.indexOf(fetchedEvent[0].Name) === -1 && eventCall === '1') {
+        //         event1Members.push(member);
+        //     } else if (memberEvents.indexOf(fetchedEvent[0].Name) === -1 && eventCall === '2') {
+        //         event2Members.push(member);
+        //     }
+        // }
+        
+        // if (eventCall === '1') {
+        //     setEvent1Members(event1Members)
+        // } else if (eventCall === '2') {
+        //     setEvent2Members(event2Members)
+        // }
+
+        if (eventCall === '1') {
+            setEvent1Members(members)
+        } else if (eventCall === '2') {
+            setEvent2Members(members)
+        }
+
+        // handle disable
+
         var secondMemberId = "member" + eventCall + "2";
         var thirdMemberId = "member" + eventCall + "3";
         var fourthMemberId = "member" + eventCall + "4";
@@ -497,6 +564,56 @@ const Home = () => {
         const fetchedEvent = await master_events.filter(event => {
             return event.Name === selectedEvent;
         });
+
+        // handle dropdown member changing
+
+        if (eventCall === '1') {
+            var event1Members = []
+        } else if (eventCall === '2') {
+            var event2Members = []
+        }
+         
+        for (const member of members) {
+            var members_signups = await master_signups.filter(signup => {
+                return ((signup.member1 === member.email || signup.member2 === member.email || signup.member3 === member.email || signup.member4 === member.email || signup.member5 === member.email) && (signup.conf === signupConf));
+            });
+
+            var memberEvents = members_signups.map(a => a.eventName);
+              
+            if (memberEvents.indexOf(fetchedEvent[0].Name) === -1 && eventCall === '1') {
+                event1Members.push(member);
+            } else if (memberEvents.indexOf(fetchedEvent[0].Name) === -1 && eventCall === '2') {
+                event2Members.push(member);
+            }
+        }
+        
+        if (eventCall === '1') {
+            setEvent1Members(event1Members)
+            setSignups({
+                ...signups,
+                firstMember1: email,
+                firstMember2: "",
+                firstMember3: "",
+                firstMember4: "",
+                firstMember5: "",
+                firstEventID: "",
+            });
+        } else if (eventCall === '2') {
+            setEvent2Members(event2Members);
+            setSignups({
+                ...signups,
+                secondMember1: email,
+                secondMember2: "",
+                secondMember3: "",
+                secondMember4: "",
+                secondMember5: "",
+                secondEventID: "",
+            });
+        }
+
+
+        // handle disable
+
 
         var secondMemberId = "member" + eventCall + "2";
         var thirdMemberId = "member" + eventCall + "3";
@@ -745,6 +862,7 @@ const Home = () => {
             if (addEditEvent1 === "Add") {
                 var inHouseRequired = false;
                 var additionalSignups = [];
+                var completeAction = true;
 
                 const event = await master_events.find(event => event.Name === signups.firstEvent);
                 const event_signups = await master_signups.filter(signup => signup.eventName === event.Name);
@@ -755,29 +873,73 @@ const Home = () => {
                     additionalSignups = event_signups;
                 }
 
-                const signupDoc = {
-                    docID,
-                    eventName: signups.firstEvent,
-                    member1: signups.firstMember1,
-                    member2: signups.firstMember2,
-                    member3: signups.firstMember3,
-                    member4: signups.firstMember4,
-                    member5: signups.firstMember5,
-                    conf: signupConf,
-                    id: docID,
-                    inHouseRequired
-                };
+                var signupsMembers = [signups.firstMember2, signups.firstMember3, signups.firstMember4, signups.firstMember5];
+                signupsMembers.sort((a,b) => a ? b ? a.localeCompare(b) : -1 : 1);
 
-                await createNewSignupDoc(signupDoc, additionalSignups).then(async () => {
-                    await handleSubmitEmailSend(signupDoc);
+                for (const memberEmail of signupsMembers) {
+                    if (memberEmail) {
+                        if (signupConf && signupConf === "RLC") {
+                            var users_signups = master_signups.filter(signup => {
+                                return ((signup.member1 === memberEmail || signup.member2 === memberEmail || signup.member3 === memberEmail || signup.member4 === memberEmail || signup.member5 === memberEmail) && (signup.conf === "RLC" || signup.conf === "FLC"));
+                            });
+                        } else {
+                            var users_signups = master_signups.filter(signup => {
+                                return ((signup.member1 === memberEmail || signup.member2 === memberEmail || signup.member3 === memberEmail || signup.member4 === memberEmail || signup.member5 === memberEmail) && signup.conf === signupConf);
+                            });
+                        }
 
-                    await setAddEditEvent1("Edit");
-                    await setEvent2Toggle(true);
-                    toast.success("Created new signup", TOAST_PROPS);
-                    //window.location.reload(false)
-                });
+                        var memberEvents = users_signups.map(a => a.eventName);
+                            
+                        if (users_signups.length > 1 || memberEvents.indexOf(signups.firstEvent) > -1) {
+                            completeAction = false;
+                        }
+                    }
+                }
+
+                if (completeAction) {
+                    const signupDoc = {
+                        docID,
+                        eventName: signups.firstEvent,
+                        member1: signups.firstMember1,
+                        member2: signupsMembers[0],
+                        member3: signupsMembers[1],
+                        member4: signupsMembers[2],
+                        member5: signupsMembers[3],
+                        conf: signupConf,
+                        id: docID,
+                        inHouseRequired
+                    };
+    
+                    await createNewSignupDoc(signupDoc, additionalSignups).then(async () => {
+                        await handleSubmitEmailSend(signupDoc);
+    
+                        await setAddEditEvent1("Edit");
+                        await setEvent2Toggle(true);
+                        toast.success("Created new signup", TOAST_PROPS);
+                        //window.location.reload(false)
+                    });
+                } else {
+                    toast.error("Could not save.", TOAST_PROPS);
+                    
+                    var clearedSignups = {
+                        ...signups,
+                        firstEvent: "",
+                        firstMember1: email,
+                        firstMember2: "",
+                        firstMember3: "",
+                        firstMember4: "",
+                        firstMember5: "",
+                        firstEventID: "",
+                        secondMember1: email,
+                    };
+    
+                    setSignups(clearedSignups);
+                }
+                
                 
             } else if (addEditEvent1 === "Edit") {
+                var completeAction = true;
+
                 const signupDoc = {
                     id: signups.firstEventID,
                     eventName: signups.firstEvent,
@@ -790,15 +952,57 @@ const Home = () => {
 
                 const selected_event = await master_events.find(event => event.Name === signupDoc.eventName);
 
-                if (selected_event.TeamMemberLimit !== 'No Team') {
-                    await updateSignupDoc(signupDoc).then(async () => {
-                        await handleEditEmailSend(signupDoc);
-                        toast.success("Edited signup", TOAST_PROPS);
 
-                        //window.location.reload(false)
-                    }); // TODO NOTIFICATION
+                var signupsMembers = [signups.firstMember2, signups.firstMember3, signups.firstMember4, signups.firstMember5];
+                signupsMembers.sort((a,b) => a ? b ? a.localeCompare(b) : -1 : 1);
+
+                for (const memberEmail of signupsMembers) {
+                    if (memberEmail) {
+                        if (signupConf && signupConf === "RLC") {
+                            var users_signups = master_signups.filter(signup => {
+                                return ((signup.member1 === memberEmail || signup.member2 === memberEmail || signup.member3 === memberEmail || signup.member4 === memberEmail || signup.member5 === memberEmail) && (signup.conf === "RLC" || signup.conf === "FLC"));
+                            });
+                        } else {
+                            var users_signups = master_signups.filter(signup => {
+                                return ((signup.member1 === memberEmail || signup.member2 === memberEmail || signup.member3 === memberEmail || signup.member4 === memberEmail || signup.member5 === memberEmail) && signup.conf === signupConf);
+                            });
+                        }
+
+                        var memberEvents = users_signups.map(a => a.eventName);
+                            
+                        if (users_signups.length > 1 || memberEvents.indexOf(signups.firstEvent) > -1) {
+                            completeAction = false;
+                        }
+                    }
+                }
+
+                if (completeAction) {
+                    if (selected_event.TeamMemberLimit !== 'No Team') {
+                        await updateSignupDoc(signupDoc).then(async () => {
+                            await handleEditEmailSend(signupDoc);
+                            toast.success("Edited signup", TOAST_PROPS);
+
+                            //window.location.reload(false)
+                        }); // TODO NOTIFICATION
+                    } else {
+                        toast.error('Cannot edit an individual event.', TOAST_PROPS);
+                    }
                 } else {
-                    toast.error('Cannot edit an individual event.', TOAST_PROPS);
+                    toast.error("Could not save.", TOAST_PROPS);
+                    
+                    // var clearedSignups = {
+                    //     ...signups,
+                    //     firstEvent: "",
+                    //     firstMember1: email,
+                    //     firstMember2: "",
+                    //     firstMember3: "",
+                    //     firstMember4: "",
+                    //     firstMember5: "",
+                    //     firstEventID: "",
+                    //     secondMember1: email,
+                    // };
+    
+                    // setSignups(clearedSignups);
                 }
                 
             }
@@ -814,6 +1018,7 @@ const Home = () => {
             if (addEditEvent2 === "Add") {
                 var inHouseRequired = false;
                 var additionalSignups = [];
+                var completeAction = true;
 
                 const event = await master_events.find(event => event.Name === signups.secondEvent);
                 const event_signups = await master_signups.filter(signup => signup.eventName === event.Name);
@@ -824,28 +1029,73 @@ const Home = () => {
                     additionalSignups = event_signups;
                 }
 
-                const signupDoc = {
-                    docID,
-                    eventName: signups.secondEvent,
-                    member1: signups.secondMember1,
-                    member2: signups.secondMember2,
-                    member3: signups.secondMember3,
-                    member4: signups.secondMember4,
-                    member5: signups.secondMember5,
-                    conf: signupConf,
-                    id: docID,
-                    inHouseRequired
-                };
+                var signupsMembers = [signups.secondMember2, signups.secondMember3, signups.secondMember4, signups.secondMember5];
+                signupsMembers.sort((a,b) => a ? b ? a.localeCompare(b) : -1 : 1);
 
-                await createNewSignupDoc(signupDoc, additionalSignups).then(async () => {
-                    await handleSubmitEmailSend(signupDoc);
+                for (const memberEmail of signupsMembers) {
+                    if (memberEmail) {
+                        if (signupConf && signupConf === "RLC") {
+                            var users_signups = master_signups.filter(signup => {
+                                return ((signup.member1 === memberEmail || signup.member2 === memberEmail || signup.member3 === memberEmail || signup.member4 === memberEmail || signup.member5 === memberEmail) && (signup.conf === "RLC" || signup.conf === "FLC"));
+                            });
+                        } else {
+                            var users_signups = master_signups.filter(signup => {
+                                return ((signup.member1 === memberEmail || signup.member2 === memberEmail || signup.member3 === memberEmail || signup.member4 === memberEmail || signup.member5 === memberEmail) && signup.conf === signupConf);
+                            });
+                        }
 
-                    await setAddEditEvent2("Edit");
-                    toast.success("Created new signup", TOAST_PROPS);
+                        var memberEvents = users_signups.map(a => a.eventName);
+                            
+                        if (users_signups.length > 1 || memberEvents.indexOf(signups.secondEvent) > -1) {
+                            completeAction = false;
+                        }
+                    }
+                }
 
-                    //window.location.reload(false)
-                });
+                if (completeAction) {
+
+                    const signupDoc = {
+                        docID,
+                        eventName: signups.secondEvent,
+                        member1: signups.secondMember1,
+                        member2: signupsMembers[0],
+                        member3: signupsMembers[1],
+                        member4: signupsMembers[2],
+                        member5: signupsMembers[3],
+                        conf: signupConf,
+                        id: docID,
+                        inHouseRequired
+                    };
+
+                    await createNewSignupDoc(signupDoc, additionalSignups).then(async () => {
+                        await handleSubmitEmailSend(signupDoc);
+
+                        await setAddEditEvent2("Edit");
+                        toast.success("Created new signup", TOAST_PROPS);
+
+                        //window.location.reload(false)
+                    });
+                } else {
+                    toast.error("Could not save.", TOAST_PROPS);
+                    
+                    var clearedSignups = {
+                        ...signups,
+                        secondEvent: "",
+                        secondMember1: email,
+                        secondMember2: "",
+                        secondMember3: "",
+                        secondMember4: "",
+                        secondMember5: "",
+                        secondEventID: "",
+                        firstMember1: email,
+                    };
+    
+                    setSignups(clearedSignups);
+                }
+
             } else if (addEditEvent2 === "Edit") {
+                var completeAction = true;
+
                 const signupDoc = {
                     id: signups.secondEventID,
                     eventName: signups.secondEvent,
@@ -858,15 +1108,57 @@ const Home = () => {
 
                 const selected_event = await master_events.find(event => event.Name === signupDoc.eventName);
 
-                if (selected_event.TeamMemberLimit !== 'No Team') {
-                    await updateSignupDoc(signupDoc).then(async () => {
-                        await handleEditEmailSend(signupDoc);
-                        toast.success("Edited signup", TOAST_PROPS);
+                var signupsMembers = [signups.secondMember2, signups.secondMember3, signups.secondMember4, signups.secondMember5];
+                signupsMembers.sort((a,b) => a ? b ? a.localeCompare(b) : -1 : 1);
 
-                        //window.location.reload(false);
-                    }); // TODO NOTIFICATION
+                for (const memberEmail of signupsMembers) {
+                    if (memberEmail) {
+                        if (signupConf && signupConf === "RLC") {
+                            var users_signups = master_signups.filter(signup => {
+                                return ((signup.member1 === memberEmail || signup.member2 === memberEmail || signup.member3 === memberEmail || signup.member4 === memberEmail || signup.member5 === memberEmail) && (signup.conf === "RLC" || signup.conf === "FLC"));
+                            });
+                        } else {
+                            var users_signups = master_signups.filter(signup => {
+                                return ((signup.member1 === memberEmail || signup.member2 === memberEmail || signup.member3 === memberEmail || signup.member4 === memberEmail || signup.member5 === memberEmail) && signup.conf === signupConf);
+                            });
+                        }
+
+                        var memberEvents = users_signups.map(a => a.eventName);
+                            
+                        if (users_signups.length > 1 || memberEvents.indexOf(signups.secondEvent) > -1) {
+                            completeAction = false;
+                        }
+                    }
+                }
+
+                if (completeAction) {
+
+                    if (selected_event.TeamMemberLimit !== 'No Team') {
+                        await updateSignupDoc(signupDoc).then(async () => {
+                            await handleEditEmailSend(signupDoc);
+                            toast.success("Edited signup", TOAST_PROPS);
+
+                            //window.location.reload(false);
+                        }); // TODO NOTIFICATION
+                    } else {
+                        toast.error('Cannot edit an individual event.', TOAST_PROPS);
+                    }
                 } else {
-                    toast.error('Cannot edit an individual event.', TOAST_PROPS);
+                    toast.error("Could not save.", TOAST_PROPS);
+                    
+                    // var clearedSignups = {
+                    //     ...signups,
+                    //     secondEvent: "",
+                    //     secondMember1: email,
+                    //     secondMember2: "",
+                    //     secondMember3: "",
+                    //     secondMember4: "",
+                    //     secondMember5: "",
+                    //     secondEventID: "",
+                    //     firstMember1: email,
+                    // };
+    
+                    // setSignups(clearedSignups);
                 }
                 
             }
@@ -897,7 +1189,10 @@ const Home = () => {
                     inHouseRequired
                 };
                 
-                await deleteSignupDoc(signupDoc, additionalSignups).then(() => {window.location.reload(false)});
+                await deleteSignupDoc(signupDoc, additionalSignups).then(async () => {
+
+                    window.location.reload(false)
+                });
                 // TODO show successful notification
             } else {
                 const signupDoc = {
@@ -937,7 +1232,9 @@ const Home = () => {
                     inHouseRequired
                 };
                 
-                await deleteSignupDoc(signupDoc, additionalSignups).then(() => {window.location.reload(false)});
+                await deleteSignupDoc(signupDoc, additionalSignups).then(() => {
+                    window.location.reload(false)
+                });
                 // TODO show successful notification
             } else {
                 const signupDoc = {
@@ -1158,9 +1455,16 @@ const Home = () => {
                                         <option value={`${promotedEvent1}`} disabled hidden>
                                             {promotedEvent1}
                                         </option>
-                                        {(events) && (events.map((event, index) => (
-                                            <option key={index} value={event.Name}>
-                                                {event.Name}</option>)))}
+                                        {(events) && (events.map((event, index) => {
+                                            if (event.TeamMemberLimit.toLowerCase() !== 'no team') {
+                                                return (<option key={index} value={event.Name}>
+                                                    {event.Name} (Team)</option>)
+                                            }
+                                            else {
+                                                return (<option key={index} value={event.Name}>
+                                                    {event.Name}</option>)
+                                            }
+                                        }))}
 
                                     </Form.Select>
                                 </FloatingLabel>
@@ -1169,7 +1473,7 @@ const Home = () => {
 
                                 <FloatingLabel
                                     controlId="member11"
-                                    label="Member #1"
+                                    label="You"
                                     className="mb-3"
                                     style={{textAlign: "left", width: "100%"}}
                                 >
@@ -1208,7 +1512,7 @@ const Home = () => {
                                             }
                                         }))}
 
-                                        {(members) && (members.map((member, index) => {
+                                        {(event1Members) && (event1Members.map((member, index) => {
                                             if (member.email !== signups.firstMember3 && member.email !== signups.firstMember4 && member.email !== signups.firstMember5 && member !== "") {
                                                 return (<option key={index} value={member.email}>
                                                     {member.name} ({member.grade}th)</option>)
@@ -1244,7 +1548,7 @@ const Home = () => {
                                             }
                                         }))}
 
-                                        {(members) && (members.map((member, index) => {
+                                        {(event1Members) && (event1Members.map((member, index) => {
                                             if (member.email !== signups.firstMember2 && member.email !== signups.firstMember4 && member.email !== signups.firstMember5 && member !== "") {
                                                 return (<option key={index} value={member.email}>
                                                     {member.name} ({member.grade}th)</option>)
@@ -1279,7 +1583,7 @@ const Home = () => {
                                             }
                                         }))}
 
-                                        {(members) && (members.map((member, index) => {
+                                        {(event1Members) && (event1Members.map((member, index) => {
                                             if (member.email !== signups.firstMember2 && member.email !== signups.firstMember3 && member.email !== signups.firstMember5 && member !== "") {
                                                 return (<option key={index} value={member.email}>
                                                     {member.name} ({member.grade}th)</option>)
@@ -1314,7 +1618,7 @@ const Home = () => {
                                             }
                                         }))}
 
-                                        {(members) && (members.map((member, index) => {
+                                        {(event1Members) && (event1Members.map((member, index) => {
                                             if (member.email !== signups.firstMember2 && member.email !== signups.firstMember3 && member.email !== signups.firstMember4 && member !== "") {
                                                 return (<option key={index} value={member.email}>
                                                     {member.name} ({member.grade}th)</option>)
@@ -1336,7 +1640,7 @@ const Home = () => {
                                         await populateSignups(); 
                                         await setDeleteIDTracker("1");
                                         setShowDeleteDialogue(true);
-                                    } }>Delete Event Signup</Button>)}
+                                    } }>Delete Your Signup</Button>)}
                                 </div>
 
                             </Card.Body>
@@ -1366,10 +1670,15 @@ const Home = () => {
                                         </option>
                                         {(events) && (events.map((event, index) => {
                                             if (event.Name !== signups.firstEvent && (master_events.find(event => event.Name === signups.firstEvent).Group === "A" || (master_events.find(event => event.Name === signups.firstEvent).Group !== "A" && event.Group !== master_events.find(event => event.Name === signups.firstEvent).Group))) {
-                                            return <option key={index} value={event.Name}>
-                                            {event.Name}</option>
+                                                if (event.TeamMemberLimit.toLowerCase() !== 'no team') {
+                                                    return (<option key={index} value={event.Name}>
+                                                        {event.Name} (Team)</option>)
+                                                }
+                                                else {
+                                                    return (<option key={index} value={event.Name}>
+                                                        {event.Name}</option>)
+                                                }
                                         }}))}
-
                                     </Form.Select>
                                 </FloatingLabel>
 
@@ -1377,7 +1686,7 @@ const Home = () => {
 
                                 <FloatingLabel
                                     controlId="member21"
-                                    label="Member #1"
+                                    label="You"
                                     className="mb-3"
                                     style={{textAlign: "left", width: "100%"}}
                                 >
@@ -1416,7 +1725,7 @@ const Home = () => {
                                             }
                                         }))}
 
-                                        {(members) && (members.map((member, index) => {
+                                        {(event2Members) && (event2Members.map((member, index) => {
                                             if (member.email !== signups.secondMember3 && member.email !== signups.secondMember4 && member.email !== signups.secondMember5 && member !== "") {
                                                 return (<option key={index} value={member.email}>
                                                     {member.name} ({member.grade}th)</option>)
@@ -1452,7 +1761,7 @@ const Home = () => {
                                             }
                                         }))}
 
-                                        {(members) && (members.map((member, index) => {
+                                        {(event2Members) && (event2Members.map((member, index) => {
                                             if (member.email !== signups.secondMember2 && member.email !== signups.secondMember4 && member.email !== signups.secondMember5 && member !== "") {
                                                 return (<option key={index} value={member.email}>
                                                     {member.name} ({member.grade}th)</option>)
@@ -1487,7 +1796,7 @@ const Home = () => {
                                             }
                                         }))}
 
-                                        {(members) && (members.map((member, index) => {
+                                        {(event2Members) && (event2Members.map((member, index) => {
                                             if (member.email !== signups.secondMember2 && member.email !== signups.secondMember3 && member.email !== signups.secondMember5 && member !== "") {
                                                 return (<option key={index} value={member.email}>
                                                     {member.name} ({member.grade}th)</option>)
@@ -1522,7 +1831,7 @@ const Home = () => {
                                             }
                                         }))}
 
-                                        {(members) && (members.map((member, index) => {
+                                        {(event2Members) && (event2Members.map((member, index) => {
                                             if (member.email !== signups.secondMember2 && member.email !== signups.secondMember3 && member.email !== signups.secondMember4 && member !== "") {
                                                 return (<option key={index} value={member.email}>
                                                     {member.name} ({member.grade}th)</option>)
@@ -1543,7 +1852,7 @@ const Home = () => {
                                         await populateSignups(); 
                                         await setDeleteIDTracker("2");
                                         setShowDeleteDialogue(true);
-                                    } }>Delete Event Signup</Button>)}
+                                    } }>Delete Your Signup</Button>)}
                                 </div>
 
                             </Card.Body>

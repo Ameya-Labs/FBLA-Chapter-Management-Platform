@@ -107,10 +107,8 @@ const Header = () => {
                             <NavDropdown className="navItem" title="Member Access" id="collasible-nav-dropdown">
                                 <NavDropdown.Item href="/meetings">Meetings</NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item href="/events-list">Events List</NavDropdown.Item>
-
-                                <NavDropdown.Divider />
                                 <NavDropdown.Item href="/signups">Signups List</NavDropdown.Item>
+                                <NavDropdown.Item href="/events-list">Events List</NavDropdown.Item>
                             </NavDropdown>
                             <Nav.Link className="navItem" as="a" href={`${APPLICATION_VARIABLES.CHAPTER_WEBSITE}`} target="_blank">Chapter Website</Nav.Link>
                             <Nav.Link className="navItem" href="/help">Help</Nav.Link>
