@@ -200,7 +200,10 @@ const EventsList = () => {
                         CompetitorLimit: eventCompetitorLimit.value,
                     };
 
-                    await createNewEventDoc( eventDoc ).then(() => {window.location.reload(false)});
+                    await createNewEventDoc( eventDoc ).then(() => {
+                        toast.success("Created new event", TOAST_PROPS);
+                        // window.location.reload(false)
+                    });
                 } else {
                     toast.error('Event already exsists', TOAST_PROPS);
                 }
@@ -222,8 +225,8 @@ const EventsList = () => {
                 };
 
                 await updateEventDoc( eventDoc ).then(() => {
-                    //toast.success(`${eventName.value} successfully updated.`, TOAST_PROPS);
-                    window.location.reload(false)
+                    toast.success(`Updated event`, TOAST_PROPS);
+                    //window.location.reload(false)
                 });
 
                 handleModalClose();
@@ -234,7 +237,10 @@ const EventsList = () => {
     }
 
     const handleEventDelete = async () => {
-        await deleteEventDoc(currentEvent.eventName).then(() => {window.location.reload(false)});
+        await deleteEventDoc(currentEvent.eventName).then(() => {
+            toast.success(`Deleted event`, TOAST_PROPS);
+            //window.location.reload(false)
+        });
         //alert(`Deletion Successful`);
         handleModalClose();
     };

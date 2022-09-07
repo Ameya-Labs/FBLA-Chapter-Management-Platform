@@ -138,7 +138,8 @@ const PaidMemberList = () => {
 
                 if (paid_member_student_nums.indexOf(studentNum) === -1) {
                     createPaidMemberDoc({ name, email, studentNum }).then(() => {
-                        window.location.reload(false);
+                        //window.location.reload(false);
+                        toast.success(`Created paid member`, TOAST_PROPS);
                     });
                 } else {
                     toast.error('Student already exsists', TOAST_PROPS);
@@ -153,7 +154,10 @@ const PaidMemberList = () => {
                     name: memberName.value,
                 };
         
-                updatePaidMemberDoc(memberDoc).then(() => {window.location.reload(false)});
+                updatePaidMemberDoc(memberDoc).then(() => {
+                    //window.location.reload(false)
+                    toast.success(`Updated paid member`, TOAST_PROPS);
+                });
 
                 //alert(`${userEmail.value} is successfully updated.`);
                 handleModalClose();
@@ -170,9 +174,11 @@ const PaidMemberList = () => {
 
         deletePaidMemberDoc(studentNum).then(() => {
             updateUserDocPaidMemberBool(email, false).then(() => {
-                window.location.reload(false);
+                //window.location.reload(false);
+                toast.success(`Deleted paid member`, TOAST_PROPS);
             }).catch((error) => {
-                window.location.reload(false);
+                // window.location.reload(false);
+                toast.error(`Could not delete`, TOAST_PROPS);
             });
         });
 

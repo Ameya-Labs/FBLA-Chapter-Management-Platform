@@ -140,18 +140,27 @@ const MeetingsList = () => {
                 flag: 'meeting',
             };
 
-            await createNewMeetingDoc( meetingDoc ).then(() => {window.location.reload(false)});
+            await createNewMeetingDoc( meetingDoc ).then(() => {
+                //window.location.reload(false)
+                toast.success(`Created new meeting`, TOAST_PROPS);
+            });
         } else {
             toast.error('Fill out all new meeting fields', TOAST_PROPS);
         }
     };
 
     const handleAttendanceToggle = async (id, action) => {
-        await updateMeetingsAttendanceToggleBool(id, action).then(() => {window.location.reload(false)});
+        await updateMeetingsAttendanceToggleBool(id, action).then(() => {
+            //window.location.reload(false)
+            toast.success(`Updated meeting status`, TOAST_PROPS);
+        });
     };
 
     const handleMeetingDelete = async () => {
-        await deleteMeetingDoc(currentMeeting.id).then(() => {window.location.reload(false)});
+        await deleteMeetingDoc(currentMeeting.id).then(() => {
+            //window.location.reload(false)
+            toast.success(`Deleted meeting`, TOAST_PROPS);
+        });
     }
 
     const handleMarkPresent = async (verifiedCode, id, attendees) => {
@@ -172,7 +181,10 @@ const MeetingsList = () => {
         var new_attendees = [...attendees, {email, location: GeoPoint(latitude, longitude)}];
 
         if (inputtedMeetingCode === verifiedCode) {
-            await updateMeetingAttendance(id, new_attendees).then(() => {window.location.reload(false)});
+            await updateMeetingAttendance(id, new_attendees).then(() => {
+                //window.location.reload(false)
+                toast.success(`Marked present`, TOAST_PROPS);
+            });
         } else {
             toast.error('Incorrect meeting code', TOAST_PROPS);
         }
@@ -262,7 +274,8 @@ const MeetingsList = () => {
         
         await updateMeetingsAttendanceToggleBool(meetingID, action);
 
-        return action; // true for active meeting, false for not active meeting
+        //return action; // true for active meeting, false for not active meeting
+        return true; // true for active meeting, false for not active meeting
     };
 
 
