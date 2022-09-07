@@ -178,7 +178,7 @@ const MeetingsList = () => {
             longitude = position.coords.longitude
         }
 
-        var new_attendees = [...attendees, {email, location: GeoPoint(latitude, longitude)}];
+        var new_attendees = [...attendees, {email, location: new GeoPoint(latitude, longitude)}];
 
         if (inputtedMeetingCode === verifiedCode) {
             await updateMeetingAttendance(id, new_attendees).then(() => {
@@ -270,7 +270,7 @@ const MeetingsList = () => {
 
         const current_time_in_seconds = new Date() / 1000;
 
-        const action = current_time_in_seconds >= start_time_in_seconds &&  current_time_in_seconds <= end_time_in_seconds;
+        const action = current_time_in_seconds >= start_time_in_seconds && current_time_in_seconds <= end_time_in_seconds;
         
         //await updateMeetingsAttendanceToggleBool(meetingID, action);
         await updateMeetingsAttendanceToggleBool(meetingID, true);
