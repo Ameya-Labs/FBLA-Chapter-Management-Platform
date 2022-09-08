@@ -434,7 +434,7 @@ const Calendar = ({role}) => {
               slotEventOverlap={true}
               nowIndicator={true}
               scrollTime='07:00:00'
-              longPressDelay='20'
+              //longPressDelay='20'
           
               selectable={role !== 'member'}
               selectMirror={true}

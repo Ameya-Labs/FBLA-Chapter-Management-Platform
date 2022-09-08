@@ -88,6 +88,8 @@ const ChapterInfo = ({master_users, master_signups, master_events, master_paid_m
       } else {return false}
     });
 
+    officers.sort((a, b) => a.name.localeCompare(b.name))
+
     setOfficersList(officers);
   }, [master_users]);
 
@@ -97,6 +99,8 @@ const ChapterInfo = ({master_users, master_signups, master_events, master_paid_m
         return user.role === 'adviser';
       } else {return false}
     });
+
+    advisers.sort((a, b) => a.name.localeCompare(b.name))
 
     setAdvisersList(advisers);
   }, [master_users]);
