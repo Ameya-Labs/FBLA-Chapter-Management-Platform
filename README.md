@@ -6,7 +6,7 @@ FBLA Chapter Management Platform
    1. Integrated membership form (coming soon)
 
 1.	Membership
-   - Integrated membership form (coming soon)
+   1. Integrated membership form (coming soon)
    - Paid member tracking
    - Member onboarding 
    - End of school year membership letters (coming soon)
