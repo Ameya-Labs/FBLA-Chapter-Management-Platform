@@ -2,6 +2,9 @@
 
 FBLA Chapter Management Platform
 
+1. Membership
+   1. Integrated membership form (coming soon)
+
 1.	Membership
    - Integrated membership form (coming soon)
    - Paid member tracking
