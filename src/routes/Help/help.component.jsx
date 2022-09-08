@@ -38,10 +38,7 @@ const Help = () => {
                         <br />
                         <Card.Subtitle className="mb-2 mt-2 text-muted"><i>A product by <a href="https://www.linkedin.com/company/ameya-labs" target="_blank">Ameya Labs</a></i></Card.Subtitle>
 
-                        <Card.Subtitle className="mb-2 mt-2 text-muted"><i>Licensed under the <a href="https://github.com/Ameya-Labs/FBLA-Chapter-Management-Platform/blob/main/LICENSE.md" target="_blank">MIT License</a></i></Card.Subtitle>
-                        
-                        <Card.Subtitle className="mb-2 mt-2 text-muted"><i>Sourced from <a href="https://github.com/Ameya-Labs/FBLA-Chapter-Management-Platform" target="_blank">here</a></i></Card.Subtitle>
-
+                        <Card.Subtitle className="mb-2 mt-2 text-muted"><i>Licensed under the <a href="https://github.com/Ameya-Labs/FBLA-Chapter-Management-Platform/blob/main/LICENSE.md" target="_blank">MIT License</a>. Source code on <a href="https://github.com/Ameya-Labs/FBLA-Chapter-Management-Platform" target="_blank">GitHub</a>.</i></Card.Subtitle>
                         
                         <br />
                         <Card.Subtitle className="mb-2 text-muted"><strong>Version:</strong> {APPLICATION_VARIABLES.VERSION}</Card.Subtitle>

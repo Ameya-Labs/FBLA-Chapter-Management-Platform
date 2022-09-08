@@ -54,8 +54,11 @@
     
   }
 
+  td.fc-day-sat { background-color: #fafafa;  }
+  td.fc-day-sun { background-color: #fafafa; }
+
   .fc-col-header {
-    background-color: #d9d9d9;
+    background-color: #d9d9d9 !important;
   }
 
   .fc-daygrid-day-number {

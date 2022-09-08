@@ -9,6 +9,7 @@ import { onSnapshot, doc } from "firebase/firestore";
 import { selectCurrentUser } from '../../store/user/user.selector';
 
 import Spinner from '../../components/Spinner/spinner.component';
+import TotalCountCard from '../../components/TotalCardCount/total-card-count.component';
 
 import RandomCodeGenerator from '../../functions/random-code-generator.function';
 
@@ -33,7 +34,7 @@ const DEFAULT_CURRENT_QUICK_LINK = {
   id: "",
 };
 
-const ChapterInfo = ({master_users}) => {
+const ChapterInfo = ({master_users, master_signups, master_events, master_paid_members}) => {
   const [showQuickLinksManager, setShowQuickLinksManager] = useState(false);
   const [masterQuickLinks, setMasterQuickLinks] = useState([]);
   const [isMasterQuickLinksLoading, setIsMasterQuickLinksLoading] = useState(true);
@@ -41,8 +42,26 @@ const ChapterInfo = ({master_users}) => {
   const [newQuickLink, setNewQuickLink] = useState(DEFAULT_CURRENT_QUICK_LINK);
   const [officersList, setOfficersList] = useState([]);
   const [advisersList, setAdvisersList] = useState([]);
+  const [dataForStatBar, setDataForStatBar] = useState({});
 
   const { role } = useSelector(selectCurrentUser);
+
+
+
+  useEffect(() => {
+    const count_Data_OBJ = {
+        signups_data: master_signups,
+        signups_path: "/signups",
+        events_data: master_events,
+        events_path: "/events-list",
+        users_data: master_users,
+        users_path: "/user-list",
+        paid_members_data: master_paid_members,
+        paid_members_path: "/paid-members-list",
+    };
+
+    setDataForStatBar(count_Data_OBJ);
+  }, [master_signups, master_events, master_users, master_paid_members]);
 
 
   useEffect(() => {
@@ -243,10 +262,11 @@ const ChapterInfo = ({master_users}) => {
                     <Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
                         <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>Chapter Info</Card.Header>
                         <Card.Body>
-                            <CardGroup style={{ align: 'center', display: "flex", flexDirection: "row", justifyContent: 'center', alignContent: 'center', flexWrap: 'wrap' }}>
-                            
+                            {dataForStatBar.events_data && dataForStatBar.signups_data && dataForStatBar.users_data && dataForStatBar.paid_members_data && role && <TotalCountCard data_OBJ={dataForStatBar} role={role} />}
 
-                                <Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
+                            <CardGroup style={{ align: 'center', display: "flex", flexDirection: "row", justifyContent: 'center', alignContent: 'center', flexWrap: 'wrap' }}>
+
+                                <Card className="m-5 mt-4 mb-2 mx-auto" style={{ maxWidth: '60rem' }}>
                                     <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>Quick Links</Card.Header>
                                     <Card.Body>
                                             {role !== 'member' && (
@@ -270,7 +290,7 @@ const ChapterInfo = ({master_users}) => {
                                 </Card>
 
 
-                                <Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
+                                <Card className="m-5 mt-4 mb-2 mx-auto" style={{ maxWidth: '60rem' }}>
                                     <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>Chapter Leadership</Card.Header>
                                     <Card.Body>
                                         
@@ -293,7 +313,7 @@ const ChapterInfo = ({master_users}) => {
                                             { !advisersList ? <Spinner /> : (<>
                                                 
                                                 {(advisersList) ? (advisersList.map((adviser, index) => (
-                                                    <Card.Subtitle className="mt-3" key={index} >{adviser.name}</Card.Subtitle>
+                                                    <Card.Subtitle className="mt-3" key={index} ><a href={`mailto:${adviser.email}`}>{adviser.name}</a></Card.Subtitle>
                                                 ))) : (
                                                     <p>No advisers</p>
                                                 )

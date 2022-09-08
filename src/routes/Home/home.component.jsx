@@ -27,7 +27,6 @@ import RandomCodeGenerator from '../../functions/random-code-generator.function'
 import Header from '../../components/Header/header.component';
 import NavigationCard from '../../components/NavigationCard/navigation-card.component';
 import Spinner from '../../components/Spinner/spinner.component';
-import TotalCountCard from '../../components/TotalCardCount/total-card-count.component';
 import Calendar from '../../components/Calendar/calendar.component';
 import ChapterInfo from '../../components/ChapterInfo/chapter-info.component';
 
@@ -95,7 +94,6 @@ const Home = () => {
     const [promotedEvent2, setPromotedEvent2] = useState("");
     const [membersToShow, setMembersToShow] = useState([]);
     const [signupRadio, setSignupRadio] = useState("");
-    const [dataForStatBar, setDataForStatBar] = useState({});
     const [signupActivationToggle, setSignupActivationToggle] = useState('');
     const [signupDate, setSignupDate] = useState("");
     const [resourcesLink, setResourcsLink] = useState("");
@@ -189,21 +187,6 @@ const Home = () => {
         }
         
     }, [signupToggle, signupConf]);
-
-    useEffect(() => {
-        const count_Data_OBJ = {
-            signups_data: master_signups,
-            signups_path: "/signups",
-            events_data: master_events,
-            events_path: "/events-list",
-            users_data: master_users,
-            users_path: "/user-list",
-            paid_members_data: master_paid_members,
-            paid_members_path: "/paid-members-list",
-        };
-
-        setDataForStatBar(count_Data_OBJ);
-    }, [master_signups, master_events, master_users, master_paid_members]);
 
     useEffect(() => {
         fetchEvents();
@@ -1349,9 +1332,7 @@ const Home = () => {
                     <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR, fontSize: '18px' }}>Welcome, <strong>{name}</strong>! <Badge pill bg="danger">{role.toUpperCase()}</Badge></Card.Header>
                     <Card.Body>
                         {role && <Calendar role={role} />}
-                        
-                        {dataForStatBar.events_data && dataForStatBar.signups_data && dataForStatBar.users_data && dataForStatBar.paid_members_data && role && <TotalCountCard data_OBJ={dataForStatBar} role={role} />}
-                        
+                                                
                         {role === "adviser" && (<div>
                             <hr />
                             <h6><strong><i>Enable/Disable Event Registration</i></strong></h6>
@@ -1869,7 +1850,19 @@ const Home = () => {
                     </Card.Body>
                 </Card>)}
 
-                <ChapterInfo master_users={master_users} />
+                {role !== "adviser" && !signupToggle && (<Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
+                     <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>Event Signup</Card.Header>
+                     <Card.Body>
+                         <div>
+                             {resourcesLink && (<Button className="me-2" href={resourcesLink} variant="secondary" target='_blank'>Events Resources</Button>)}
+                             <Button href="/events-list" variant="secondary">Events List</Button>
+                         </div>
+                         <Card.Title className="mt-3">Event signups are not available.</Card.Title>
+                         <Card.Subtitle className="mb-2 text-muted">Please check back later.</Card.Subtitle>
+                     </Card.Body>
+                 </Card>)}
+
+                <ChapterInfo master_users={master_users} master_signups={master_signups} master_events={master_events} master_paid_members={master_paid_members} />
                 
             </>)}
             
