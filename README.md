@@ -1,6 +1,6 @@
 ## Introduction
 
-FBLA Chapter Management Platform
+The FBLA CMP is a management platform for local FBLA chapters across topics like membership, chapter meetings, competitive events, elections, and more! The platform is capable of managing users with member, officer, or adviser permissions, and can be fully customized for each local chapter.
 
 
 ## Features
@@ -35,7 +35,7 @@ FBLA Chapter Management Platform
    3. Voting (_coming soon_)
    4. Election results (_coming soon_)
 
-5. **Chapter Officer Elections**
+5. **Chapter Resources**
    1. Integrated list of chapter officers
    2. Integrated list of advisers and contact details
    3. Direct chapter web site access
