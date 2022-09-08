@@ -2,15 +2,11 @@
 
 FBLA Chapter Management Platform
 
-1. First list item
-   - First nested list item
-     - Second nested list item
-
 1.	Membership
-  1. Integrated membership form (coming soon)
-  2. Paid member tracking
-  3. Member onboarding 
-  4. End of school year membership letters (coming soon)
+   1. Integrated membership form (coming soon)
+   2. Paid member tracking
+   3. Member onboarding 
+   4. End of school year membership letters (coming soon)
 
 2.	Chapter Meetings/Events
   1.	Integrated calendar with chapter meetings and events
