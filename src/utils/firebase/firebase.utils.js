@@ -928,6 +928,10 @@ export const createDBStore = async () => {
         signupConf: "",
         signupDate: "",
         signupToggle: false,
+    });
+
+    await setDoc(doc(db, "db_store", "quick_links"), {
+        quick_links: [{name: 'National FBLA Website', url: "https://www.fbla-pbl.org", id: "nxmoNOKcALesRnf3Hv5f"}],
     })
 };
 
