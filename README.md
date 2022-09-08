@@ -2,6 +2,9 @@
 
 FBLA Chapter Management Platform
 
+
+## Features
+
 1. Membership
    1. Integrated membership form (coming soon)
    2. Paid member tracking
@@ -16,33 +19,31 @@ FBLA Chapter Management Platform
       * Attendance location verification (coming soon)
    5. Integrated meeting links to presentations, meeting notes, or meeting link
 
+3. Competitive Events
+   1. Competitive event signups
+      * Team/Individual validation
+      * Intro event validation against member grade
+      * Group A/B/C validation
+      * Promotion to SLC
+      * Promotion to NLC (coming soon)
+   2. Notifications for team event signups
+   3. Competitive events resources
 
-3.	Competitive Events
-  1.	Competitive event signups
-    *	Team/Individual validation
-    *	Intro event validation against member grade
-    *	Group A/B/C validation
-    *	Promotion to SLC 
-    *	Promotion to NLC (coming soon)
-  2.	Notifications for team event signups
-  3.	Competitive events resources
+4. Chapter Officer Elections
+   1. Election signups (coming soon)
+   2. Election campaigning (coming soon)
+   3. Voting (coming soon)
+   4. Election results (coming soon)
 
-4.	Chapter Officer Elections
-  1.	Election signups (coming soon)
-  2.	Election campaigning (coming soon)
-  3.	Voting (coming soon)
-  4.	Election results (coming soon)
+5. Chapter Officer Elections
+   1. Integrated list of chapter officers
+   2. Integrated list of advisers and contact details
+   3. Direct chapter web site access
+   4. Integrated quick links
+   5. FAQ
 
-5.	Chapter Resources
-  1.	Integrated list of chapter officers
-  2.	Integrated list of advisers and contact details
-  3.	Direct chapter web site access 
-  4.	Integrated quick links
-  5.	FAQ
-
-6.	Chapter Maintenance
-  1.	Integrated platform refresh for new membership year
-
+6. Chapter Maintenance
+   1. Integrated platform refresh for new membership year
 
 
 
