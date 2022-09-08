@@ -433,12 +433,14 @@ export const deleteAllPaidMembers = async () => {
     }
 };
 
-export const createNewMeetingDoc = async ({name, date, start_time, end_time, code, attendees, attendanceToggle, id, flag}) => {
+export const createNewMeetingDoc = async ({name, date, start_time, end_time, format, type, code, attendees, attendanceToggle, id, flag}) => {
     await setDoc(doc(db, "meetings", id), {
         name,
         date,
         start_time,
         end_time,
+        format,
+        type,
         code,
         attendees,
         attendanceToggle,

@@ -53,7 +53,6 @@ const DEFAULT_CALENDAR_EVENT = {
   flag: "",
 }
 
-
 const Calendar = ({role}) => {
   const [toggleWeekends, setToggleWeekends] = useState(true);
   const [eventsData, setEventsData] = useState([]);
@@ -85,18 +84,23 @@ const Calendar = ({role}) => {
       }
 
       for (const meeting of master_meetings) {
-        const meeting_doc = {
-          id: meeting.id,
-          title: meeting.name,
-          start: `${meeting.date}T${meeting.start_time}`,
-          end: `${meeting.date}T${meeting.start_time}`,
-          flag: meeting.flag,
-          color: APPLICATION_VARIABLES.CALENDAR_MEETING_COLOR,
-        }
+        if (role === 'member' && meeting.type.toLowerCase() === 'officers only') {
+        
+        } else {
 
-        if (event_ids.indexOf(meeting_doc.id) === -1) {
-          calendar_events.push(meeting_doc);
-          event_ids.push(meeting_doc.id);
+          const meeting_doc = {
+            id: meeting.id,
+            title: meeting.name,
+            start: `${meeting.date}T${meeting.start_time}`,
+            end: `${meeting.date}T${meeting.start_time}`,
+            flag: meeting.flag,
+            color: APPLICATION_VARIABLES.CALENDAR_MEETING_COLOR,
+          }
+
+          if (event_ids.indexOf(meeting_doc.id) === -1) {
+            calendar_events.push(meeting_doc);
+            event_ids.push(meeting_doc.id);
+          }
         }
       }
 

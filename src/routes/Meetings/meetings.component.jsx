@@ -51,6 +51,8 @@ const defaultCurrentMeetingFields = {
     date: "",
     start_time: "",
     end_time: "",
+    format: "",
+    type: "",
     code: "",
     attendees: [],
     attendanceToggle: false,
@@ -109,7 +111,7 @@ const MeetingsList = () => {
 
 
     useEffect(() => {
-        const sorted_meetings = master_meetings.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const sorted_meetings = master_meetings.sort((a, b) => new Date(`${a.date}T${a.start_time}`) - new Date(`${b.date}T${b.start_time}`));
         
         setMeetings(sorted_meetings.reverse())
     }, [master_meetings])
@@ -126,13 +128,15 @@ const MeetingsList = () => {
     };
 
     const handleAddNewMeeting = async () => {
-        if (newCurrentMeeting.name && newCurrentMeeting.date && newCurrentMeeting.start_time && newCurrentMeeting.end_time) {
+        if (newCurrentMeeting.name && newCurrentMeeting.date && newCurrentMeeting.start_time && newCurrentMeeting.end_time && newCurrentMeeting.format && newCurrentMeeting.type) {
 
             const meetingDoc = {
                 name: newCurrentMeeting.name,
                 date: newCurrentMeeting.date,
                 start_time: newCurrentMeeting.start_time,
                 end_time: newCurrentMeeting.end_time,
+                format: newCurrentMeeting.format,
+                type: newCurrentMeeting.type,
                 code: RandomCodeGenerator(6),
                 attendees: [],
                 attendanceToggle: false,
@@ -381,6 +385,8 @@ const MeetingsList = () => {
                                 <th>Date</th>
                                 <th>Start Time</th>
                                 <th>End Time</th>
+                                <th>Format</th>
+                                <th>Type</th>
                                 {role !== 'member' && (<th>Code</th>)}
                                 <th>Attendee Count</th>
                                 {role !== 'adviser' && (<th>Member Actions</th>)}
@@ -454,6 +460,44 @@ const MeetingsList = () => {
                                     />
                                 </td>
 
+                                <td>
+                                    <Form.Select
+                                        value={newCurrentMeeting.format}
+                                        onChange={(e) => {
+                                            setNewCurrentMeeting({
+                                                ...newCurrentMeeting,
+                                                format: e.target.value,
+                                            });
+                                        }}
+                                        placeholder="Format"
+                                    >
+                                        <option value="" disabled defaultValue hidden>
+                                            {" "}
+                                        </option>
+                                        <option value="In-Person">In-Person</option>
+                                        <option value="Online">Online</option>
+                                    </Form.Select>
+                                </td>
+
+                                <td>
+                                    <Form.Select
+                                        value={newCurrentMeeting.type}
+                                        onChange={(e) => {
+                                            setNewCurrentMeeting({
+                                                ...newCurrentMeeting,
+                                                type: e.target.value,
+                                            });
+                                        }}
+                                        placeholder="Type"
+                                    >
+                                        <option value="" disabled defaultValue hidden>
+                                            {" "}
+                                        </option>
+                                        <option value="All">All</option>
+                                        <option value="Officers Only">Officers Only</option>
+                                    </Form.Select>
+                                </td>
+
                                 <td>{""}</td>
                                 <td>{""}</td>
                                 {role !== 'adviser' && (<td>{""}</td>)}
@@ -464,14 +508,19 @@ const MeetingsList = () => {
                                 </td>
                             </tr>)}
                             {meetings &&
-                                meetings.map((meetingItem, index) => (
+                                meetings.map((meetingItem, index) => {
                                     // TODO center text in row
-                                    <tr key={index} className="" >
+                                    if (role === 'member' && meetingItem.type.toLowerCase() === 'officers only') {
+
+                                    } else {
+                                        return (<tr key={index} className="" >
                                         <td>{index + 1}</td>
                                         <td>{ meetingItem.url ? (<a href={`${meetingItem.url}`} target="_blank">{meetingItem.name}</a>) : meetingItem.name}</td>
                                         <td>{ConvertToReadableDate(meetingItem.date)}</td>
                                         <td>{ConvertToReadableTime(meetingItem.start_time)}</td>
                                         <td>{ConvertToReadableTime(meetingItem.end_time)}</td>
+                                        <td>{meetingItem.format}</td>
+                                        <td>{meetingItem.type}</td>
                                         {role !== 'member' && (<td>{meetingItem.code}</td>)}
                                         <td>{CountAttendees(meetingItem.attendees)}</td>
 
@@ -585,8 +634,9 @@ const MeetingsList = () => {
                                                     {meetingItem && (<DownloadMeetingDetails key={meetingItem.id} inputted_data={meetingItem} />)}
                                  
                                         </td></>)}  
-                                    </tr>
-                                ))}
+                                    </tr>)
+                                }
+                            })}
                         </tbody>
                     </Table>
                 </Card.Body>
