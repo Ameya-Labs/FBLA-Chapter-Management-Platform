@@ -2,45 +2,45 @@
 
 FBLA Chapter Management Platform
 
--	Membership
-a.	Integrated membership form (coming soon)
-b.	Paid member tracking
-c.	Member onboarding 
-d.	End of school year membership letters (coming soon)
+1.	Membership
+  a.	Integrated membership form (coming soon)
+  b.	Paid member tracking
+  c.	Member onboarding 
+  d.	End of school year membership letters (coming soon)
 
--	Chapter Meetings/Events
-a.	Integrated calendar with chapter meetings and events
-b.	Chapter meetings scheduler
-c.	Notifications for meetings & events (coming soon)
-d.	Meeting attendance capabilities
-a.	Attendance location verification (coming soon)
-e.	Integrated meeting links to presentations, meeting notes, or meeting link
+2.	Chapter Meetings/Events
+  a.	Integrated calendar with chapter meetings and events
+  b.	Chapter meetings scheduler
+  c.	Notifications for meetings & events (coming soon)
+  d.	Meeting attendance capabilities
+    *	Attendance location verification (coming soon)
+  e.	Integrated meeting links to presentations, meeting notes, or meeting link
 
--	Competitive Events
-a.	Competitive event signups
-a.	Team/Individual validation
-b.	Intro event validation against member grade
-c.	Group A/B/C validation
-d.	Promotion to SLC 
-a.	Promotion to NLC (coming soon)
-b.	Notifications for team event signups
-c.	Competitive events resources
+3.	Competitive Events
+  a.	Competitive event signups
+    *	Team/Individual validation
+    *	Intro event validation against member grade
+    *	Group A/B/C validation
+    *	Promotion to SLC 
+    *	Promotion to NLC (coming soon)
+  b.	Notifications for team event signups
+  c.	Competitive events resources
 
--	Chapter Officer Elections
-a.	Election signups (coming soon)
-b.	Election campaigning (coming soon)
-c.	Voting (coming soon)
-d.	Election results (coming soon)
+4.	Chapter Officer Elections
+  a.	Election signups (coming soon)
+  b.	Election campaigning (coming soon)
+  c.	Voting (coming soon)
+  d.	Election results (coming soon)
 
--	Chapter Resources
-a.	Integrated list of chapter officers
-b.	Integrated list of advisers and contact details
-c.	Direct chapter web site access 
-d.	Integrated quick links
-e.	FAQ
+5.	Chapter Resources
+  a.	Integrated list of chapter officers
+  b.	Integrated list of advisers and contact details
+  c.	Direct chapter web site access 
+  d.	Integrated quick links
+  e.	FAQ
 
--	Chapter Maintenance
-a.	Integrated platform refresh for new membership year
+6.	Chapter Maintenance
+  a.	Integrated platform refresh for new membership year
 
 
 
