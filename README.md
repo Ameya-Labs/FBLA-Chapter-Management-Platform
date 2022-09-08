@@ -9,12 +9,12 @@ FBLA Chapter Management Platform
    - End of school year membership letters (coming soon)
 
 2.	Chapter Meetings/Events
-  1.	Integrated calendar with chapter meetings and events
-  2.	Chapter meetings scheduler
-  3.	Notifications for meetings & events (coming soon)
-  4.	Meeting attendance capabilities
-    *	Attendance location verification (coming soon)
-  5.	Integrated meeting links to presentations, meeting notes, or meeting link
+   - Integrated calendar with chapter meetings and events
+   - Chapter meetings scheduler
+   - Notifications for meetings & events (coming soon)
+   - Meeting attendance capabilities
+       * Attendance location verification (coming soon)
+   - Integrated meeting links to presentations, meeting notes, or meeting link
 
 3.	Competitive Events
   1.	Competitive event signups
