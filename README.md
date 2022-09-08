@@ -2,6 +2,10 @@
 
 FBLA Chapter Management Platform
 
+1. First list item
+   - First nested list item
+     - Second nested list item
+
 1.	Membership
   1. Integrated membership form (coming soon)
   2. Paid member tracking
