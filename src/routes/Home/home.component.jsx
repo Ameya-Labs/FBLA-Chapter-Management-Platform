@@ -305,13 +305,14 @@ const Home = () => {
             });
 
             filtered_members = await filtered_members.filter((user) => {
-                //if (email && role) {
+                if (email && role) {
                     const currentPaidMember = master_paid_members.find(a => a.email === user.email);
-                    const feature_exclude_list = APPLICATION_VARIABLES.MEMBERSHIPS.find(a => a.TYPE === currentPaidMember.membershipType).EXCLUDE_FEATURES;
+                    if (currentPaidMember) {
+                        const feature_exclude_list = APPLICATION_VARIABLES.MEMBERSHIPS.find(a => a.TYPE === currentPaidMember.membershipType).EXCLUDE_FEATURES;
         
-                    return (feature_exclude_list.indexOf('COMP_EVENTS') === -1);
-                    
-                //}
+                        return (feature_exclude_list.indexOf('COMP_EVENTS') === -1);    
+                    }
+                }
             });
 
             filtered_members.sort((a, b) => a.grade - b.grade || a.name.localeCompare(b.name));
