@@ -31,7 +31,10 @@ const ResetPassword = () => {
 
     const handleSendPasswordReset = () => {
         try {
-            sendPasswordReset(email).then(() => {toast.success("Sent reset email successfully!", TOAST_PROPS)})
+            sendPasswordReset(email).then(() => {
+                toast.success("Sent reset email successfully!", TOAST_PROPS);
+                setEmail('');
+            })
         } catch (error) {
             toast.error("Could not send reset email!", TOAST_PROPS);
         }
