@@ -9,7 +9,8 @@ The FBLA CMP is a management platform for local GA FBLA chapters across topics l
    1. Integrated membership form (_coming soon_)
    2. Paid member tracking
    3. Member onboarding 
-   4. End of school year membership letters (_coming soon_)
+   4. Capability to control feature access based on membership status
+   5. End of school year membership letters (_coming soon_)
 
 2. **Chapter Meetings/Events**
    1. Integrated calendar with chapter meetings and events
