@@ -125,6 +125,7 @@ const MeetingsList = () => {
         setCurrentMeeting(defaultCurrentMeetingFields);
         setShowDeleteDialogue(false);
         setShowMeetingLinkModal(false);
+        setAllDeleteToggle(false);
     };
 
     const handleAddNewMeeting = async () => {
@@ -208,6 +209,7 @@ const MeetingsList = () => {
     const handleAllDeleteModalClose = () => {
         setCurrentMeeting(defaultCurrentMeetingFields);
         setShowAllDeleteDialogue(false);
+        setAllDeleteToggle(false);
     }
 
     const handleAllMeetingsDelete = async () => {
@@ -650,6 +652,7 @@ const MeetingsList = () => {
                                 type="switch"
                                 id="allDeleteToggle"
                                 label=""
+                                checked={allDeleteToggle}
                                 onChange={(e) => setAllDeleteToggle(e.target.checked)}
                             />
                         </Form>

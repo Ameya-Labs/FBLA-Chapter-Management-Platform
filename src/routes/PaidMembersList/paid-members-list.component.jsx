@@ -109,6 +109,7 @@ const PaidMemberList = () => {
         setCurrentPaidMember(defaultCurrentPaidMemberFields);
         setShowAddEditForm(false);
         setShowDeleteDialogue(false);
+        setAllDeleteToggle(false);
     };
 
     const handleAddEditFormSubmit = async (e) => {
@@ -188,12 +189,14 @@ const PaidMemberList = () => {
 
     const handleCSVModalClose = () => {
         setShowCSVUpload(false);
+        setAllDeleteToggle(false);
     };
 
     const handleAllDeleteModalClose = () => {
         setCurrentPaidMember(defaultCurrentPaidMemberFields);
         setShowAddEditForm(false);
         setShowAllDeleteDialogue(false);
+        setAllDeleteToggle(false);
     }
 
     const handleAllPaidMembersDelete = async () => {
@@ -471,6 +474,7 @@ const PaidMemberList = () => {
                                 type="switch"
                                 id="allDeleteToggle"
                                 label=""
+                                checked={allDeleteToggle}
                                 onChange={(e) => setAllDeleteToggle(e.target.checked)}
                             />
                         </Form>

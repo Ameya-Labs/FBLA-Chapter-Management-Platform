@@ -160,6 +160,7 @@ const SignupsList = () => {
         setCurrentSignup(DEFAULT_EVENT_SIGNUP_FIELDS);
         setShowAddEditForm(false);
         setShowDeleteDialogue(false);
+        setAllDeleteToggle(false);
     }
 
     const handleSignupDelete = async () => {
@@ -185,6 +186,7 @@ const SignupsList = () => {
     }
 
     const handleAllDeleteModalClose = () => {
+        setAllDeleteToggle(false);
         setCurrentSignup(DEFAULT_EVENT_SIGNUP_FIELDS);
         setShowAddEditForm(false);
         setShowAllDeleteDialogue(false);
@@ -227,6 +229,7 @@ const SignupsList = () => {
 
     const handleCSVModalClose = () => {
         setShowCSVUpload(false);
+        setAllDeleteToggle(false);
     };
 
 
@@ -402,6 +405,7 @@ const SignupsList = () => {
                                     type="switch"
                                     id="allDeleteToggle"
                                     label=""
+                                    checked={allDeleteToggle}
                                     onChange={(e) => setAllDeleteToggle(e.target.checked)}
                                 />
                             </Form>
