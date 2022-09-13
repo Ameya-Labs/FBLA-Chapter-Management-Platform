@@ -7,6 +7,8 @@ import { handleEventsCSVDataUpload, handlePaidMembersCSVDataUpload, handleUsersC
 import CSVReader from '../CSVReader/csv-reader.component';
 import SmallSpinner from '../SmallSpinner/small-spinner.component';
 
+import APPLICATION_VARIABLES from '../../settings';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const TOAST_PROPS = {
@@ -183,6 +185,12 @@ const UploadCSVModal = ({type, showToggle, onHideHandler}) => {
                             <li>"studentNum" column: Enter student's six digit student number.</li>
                             <li>"name" column: Enter full name with proper capitalization.</li>
                             <li>"email" column: Enter email in all lowercase.</li>
+                            <li>"membershipType" column: Enter one of the following options...</li>
+                                <ul>
+                                    {(APPLICATION_VARIABLES.MEMBERSHIPS) && (APPLICATION_VARIABLES.MEMBERSHIPS.map((membershipOption, index) => (
+                                        <li key={index}>{membershipOption.TYPE}</li>
+                                    )))}
+                                </ul>
                         </ul>
                         <p><strong>Example:</strong></p>
                         <img src={require('../../assets/sample-paid-members-template.PNG')} alt='Chapter Pic' style={{width: '100%'}}/>

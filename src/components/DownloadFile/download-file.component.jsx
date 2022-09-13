@@ -12,7 +12,7 @@ const DownloadFile = ({data, specialCode, specialType}) => {
   const eventsSortOrder = {'Name': 1, 'Category': 2, 'Conference': 3, 'Group': 4, 'IntroEvent': 5, 'TeamEvent': 6, 'TeamMemberLimit': 7, 'CompetitorLimit': 8};
   const signupsSortOrder = {'eventName': 1, 'conf': 2, 'member1': 3, 'member2': 4, 'member3': 5, 'member4': 6, 'member5': 7, 'promotedToSLC': 8, 'id': 9};
   const signupsPromotionSortOrder = {'eventName': 1, 'conf': 2, 'member1': 3, 'member2': 4, 'member3': 5, 'member4': 6, 'member5': 7, 'id': 8, 'promotedToSLC': 9};
-  const paidMembersSortOrder = {'studentNum': 1, 'name': 2, 'email': 3};
+  const paidMembersSortOrder = {'studentNum': 1, 'name': 2, 'email': 3, 'membershipType': 4, 'createdAccount': 5};
   const meetingsSortOrder = {'name': 1, 'date': 2, 'start_time': 3, 'end_time': 4, 'code': 5, 'url': 6, 'attendeeCount': 7, 'attendees': 8};
 
   useEffect(() => {

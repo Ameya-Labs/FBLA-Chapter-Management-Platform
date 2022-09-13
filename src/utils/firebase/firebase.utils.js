@@ -383,13 +383,14 @@ export const deleteUserDoc = async (email) => {
 };
 
 export const createPaidMemberDoc = async (data) => {
-    const { name, email, studentNum } = data;
+    const { name, email, studentNum, membershipType } = data;
     
     await setDoc(doc(db, "paid_members", studentNum), {
         name,
         email,
         studentNum,
         createdAccount: false,
+        membershipType,
     }).then(async () => {
         const exsistingDocSnap = await getDoc(doc(db, "users", email));
 
@@ -406,6 +407,7 @@ export const updatePaidMemberDoc = async (memberDoc) => {
         email: memberDoc.email,
         name: memberDoc.name,
         studentNum: memberDoc.studentNum,
+        membershipType: memberDoc.membershipType,
     });
 };
 
@@ -562,6 +564,7 @@ export const handlePaidMembersCSVDataUpload = async (fileData) => {
         studentNum: '',
         name: '',
         email: '',
+        membershipType: '',
         createdAccount: false,
     };
 
@@ -569,7 +572,7 @@ export const handlePaidMembersCSVDataUpload = async (fileData) => {
     var usersBatchDocs = [];
 
     for (const docData of Object.entries(data)) {
-        if(docData[1].length === 3){
+        if(docData[1].length === 4){
             if(docData[1].includes('')) {
             
             } else {
@@ -582,6 +585,7 @@ export const handlePaidMembersCSVDataUpload = async (fileData) => {
                         studentNum: docData[1][0],
                         name: docData[1][1],
                         email: lowerCaseEmail,
+                        membershipType: docData[1][3],
                         createdAccount: true,
                     };
 
@@ -596,6 +600,7 @@ export const handlePaidMembersCSVDataUpload = async (fileData) => {
                         studentNum: docData[1][0],
                         name: docData[1][1],
                         email: lowerCaseEmail,
+                        membershipType: docData[1][3],
                         createdAccount: false,
                     };
                 }

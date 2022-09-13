@@ -103,6 +103,7 @@ const Home = () => {
     const [event2Members, setEvent2Members] = useState([]);
     const [master_signups, setMasterSignups] = useState([]);
     const [isSignupsLoading, setIsSignupsLoading] = useState(true);
+    const [currentUserMembershipCompEventsActive, setCurrentUserMembershipCompEventsActive] = useState(false);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -171,7 +172,19 @@ const Home = () => {
         if (db_resourcesLink) {
             setResourcsLink(db_resourcesLink);
         }
-    }, [db_resourcesLink])
+    }, [db_resourcesLink]);
+
+    useEffect(() => {
+        async function findMembershipType() {
+            if (email && role && role !== 'adviser') {
+                const currentPaidMember = await master_paid_members.find(a => a.email === email);
+                const feature_exclude_list = await APPLICATION_VARIABLES.MEMBERSHIPS.find(a => a.TYPE === currentPaidMember.membershipType).EXCLUDE_FEATURES;
+    
+                setCurrentUserMembershipCompEventsActive(feature_exclude_list.indexOf('COMP_EVENTS') === -1);
+            }
+        }
+        findMembershipType();
+    }, [master_paid_members, role, email]);
 
     useEffect(() => {
         if (master_signupDate) {
@@ -194,7 +207,7 @@ const Home = () => {
 
     useEffect(() => {
         fetchMembers();
-    }, [signupConf, signupToggle, master_users, name, role, master_signups]);
+    }, [signupConf, signupToggle, master_users, name, role, master_signups, email]);
 
     useEffect(() => {
         if (!isUsersListLoading && !isEventLoading && !isSignupsLoading && role !== 'adviser') {
@@ -273,7 +286,7 @@ const Home = () => {
 
     const fetchMembers = async () => {
         try {
-            const filtered_members = master_users.filter((user) => {
+            var filtered_members = master_users.filter((user) => {
                 if (signupConf && signupConf === "RLC") {
                     var users_signups = master_signups.filter(signup => {
                         return ((signup.member1 === user.email || signup.member2 === user.email || signup.member3 === user.email || signup.member4 === user.email || signup.member5 === user.email) && (signup.conf === "RLC" || signup.conf === "FLC"));
@@ -289,6 +302,16 @@ const Home = () => {
                 };
 
                 return user.email !== email && (user.role === 'officer' || user.role === 'member') && user.paidMember === true;
+            });
+
+            filtered_members = await filtered_members.filter((user) => {
+                //if (email && role) {
+                    const currentPaidMember = master_paid_members.find(a => a.email === user.email);
+                    const feature_exclude_list = APPLICATION_VARIABLES.MEMBERSHIPS.find(a => a.TYPE === currentPaidMember.membershipType).EXCLUDE_FEATURES;
+        
+                    return (feature_exclude_list.indexOf('COMP_EVENTS') === -1);
+                    
+                //}
             });
 
             filtered_members.sort((a, b) => a.grade - b.grade || a.name.localeCompare(b.name));
@@ -1405,7 +1428,7 @@ const Home = () => {
                     </Card.Body>
                 </Card>)} */}
 
-                {role !== "adviser" && signupToggle && (<Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
+                {role !== "adviser" && currentUserMembershipCompEventsActive && signupToggle && (<Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
                     {signupDate !== "" ? (<Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>{signupConf} Competitive Event Signup - Due on <strong>{ConvertToReadableDate(signupDate)}</strong></Card.Header>) : (<Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>{signupConf} Competitive Event Signup</Card.Header>)}
                     <Card.Body>
                         <div>
@@ -1850,7 +1873,7 @@ const Home = () => {
                     </Card.Body>
                 </Card>)}
 
-                {role !== "adviser" && !signupToggle && (<Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
+                {role !== "adviser" && currentUserMembershipCompEventsActive && !signupToggle && (<Card className="m-5 mt-4 mb-7 mx-auto" style={{ maxWidth: '60rem', backgroundColor: APPLICATION_VARIABLES.CARD_BACKGROUND_COLOR }}>
                      <Card.Header style={{ backgroundColor: APPLICATION_VARIABLES.CARD_HEADER_COLOR, color: APPLICATION_VARIABLES.CARD_HEADER_TEXT_COLOR }}>Event Signup</Card.Header>
                      <Card.Body>
                          <div>

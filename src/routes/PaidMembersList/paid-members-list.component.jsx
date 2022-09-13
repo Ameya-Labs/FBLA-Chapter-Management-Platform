@@ -47,6 +47,7 @@ const defaultCurrentPaidMemberFields = {
     email: "",
     studentNum: "",
     name: "",
+    membershipType: "",
 };
 
 const PaidMemberList = () => {
@@ -62,6 +63,7 @@ const PaidMemberList = () => {
     const [showAllDeleteDialogue, setShowAllDeleteDialogue] = useState(false);
     const [paid_members, setPaidMembers] = useState([]);
     const [isPaidMembersListLoading, setIsPaidMembersLoading] = useState(true);
+    const [membershipOptions, setMembershipOptions] = useState([]);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -91,14 +93,11 @@ const PaidMemberList = () => {
         return unsubscribe
     }, []);
 
-
-
     useEffect(() => {
         if (paid_members) {
             setIsPaidMembersLoading(false);
         }
     }, [paid_members]);
-
 
     useEffect(() => {
         if (loading) return;
@@ -119,12 +118,14 @@ const PaidMemberList = () => {
             memberEmail,
             memberStudentNum,
             memberName,
+            memberMembershipType,
         } = e.target.elements;
 
         if (
             memberEmail.value &&
             memberStudentNum.value &&
-            memberName.value
+            memberName.value &&
+            memberMembershipType.value
         ) {
             if (addEditFormType === "Add") {
 
@@ -136,9 +137,10 @@ const PaidMemberList = () => {
                 const name = memberName.value;
                 const studentNum = memberStudentNum.value;
                 const email = memberEmail.value;
+                const membershipType = memberMembershipType.value;
 
                 if (paid_member_student_nums.indexOf(studentNum) === -1) {
-                    createPaidMemberDoc({ name, email, studentNum }).then(() => {
+                    createPaidMemberDoc({ name, email, studentNum, membershipType }).then(() => {
                         //window.location.reload(false);
                         toast.success(`Created paid member`, TOAST_PROPS);
                     });
@@ -153,6 +155,7 @@ const PaidMemberList = () => {
                     email: memberEmail.value,
                     studentNum: memberStudentNum.value,
                     name: memberName.value,
+                    membershipType: memberMembershipType.value,
                 };
         
                 updatePaidMemberDoc(memberDoc).then(() => {
@@ -350,6 +353,33 @@ const PaidMemberList = () => {
                             </Form.Control.Feedback>
                         </FloatingLabel>
 
+                        <FloatingLabel
+                            controlId="memberMembershipType"
+                            label="Membership Type"
+                            className="mb-3"
+                        >
+                            <Form.Select
+                                disabled={false}
+                                value={currentPaidMember.membershipType}
+                                onChange={(e) => {
+                                    setCurrentPaidMember({
+                                        ...currentPaidMember,
+                                        membershipType: e.target.value,
+                                    });
+                                }}
+                                name="memberMembershipType"
+                            >
+                                <option value="" disabled defaultValue hidden>
+                                    Select type
+                                </option>
+
+                                {(APPLICATION_VARIABLES.MEMBERSHIPS) && (APPLICATION_VARIABLES.MEMBERSHIPS.map((membershipOption, index) => (
+                                    <option key={index} value={membershipOption.TYPE}>
+                                        {membershipOption.TYPE}</option>
+                                )))}
+
+                            </Form.Select>
+                        </FloatingLabel>
                         
                     </Modal.Body>
                     <Modal.Footer>
@@ -400,6 +430,7 @@ const PaidMemberList = () => {
                                 <th>Student Num</th>
                                 <th>Full Name</th>
                                 <th>Email</th>
+                                <th>Membership Type</th>
                                 <th>Created Account</th>
                                 <th>Actions</th>
                             </tr>
@@ -413,6 +444,7 @@ const PaidMemberList = () => {
                                         <td>{userItem.studentNum}</td>
                                         <td>{userItem.name}</td>
                                         <td>{userItem.email}</td>
+                                        <td>{userItem.membershipType}</td>
                                         <td>{(userItem.createdAccount===true) ? '✓' : '-'}</td>
                                     
                                         <td className="space-x-2">
@@ -427,6 +459,7 @@ const PaidMemberList = () => {
                                                                 studentNum:
                                                                     userItem.studentNum,
                                                                 name: userItem.name,
+                                                                membershipType: userItem.membershipType,
                                                             });
 
                                                             setAddEditFormType(
@@ -449,6 +482,7 @@ const PaidMemberList = () => {
                                                                 studentNum:
                                                                     userItem.studentNum,
                                                                 name: userItem.name,
+                                                                membershipType: userItem.membershipType,
                                                             });
 
                                                             setShowDeleteDialogue(

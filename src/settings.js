@@ -7,6 +7,21 @@ const APPLICATION_VARIABLES = {
   LANDING_PAGE_DESCRIPTION: "Short chapter description or promotional text here.",
   DEFAULT_PASSWORD:"FBLAChapter123",
 
+  // Membership
+  // EXCLUDE_FEATURES codes -> COMP_EVENTS, (more coming soon)
+  MEMBERSHIPS: [
+    {
+      TYPE: 'GENERAL',
+      PRICE: '20',
+      EXCLUDE_FEATURES: ['COMP_EVENTS'],
+    },
+    {
+      TYPE: 'PREMIUM',
+      PRICE: '35',
+      EXCLUDE_FEATURES: [],
+    },
+  ],
+
   // Socials (leave blank if chapter doesn't have one)
   CHAPTER_INSTAGRAM_URL: "https://www.instagram.com/",
   CHAPTER_TWITTER_URL: "https://twitter.com/",
