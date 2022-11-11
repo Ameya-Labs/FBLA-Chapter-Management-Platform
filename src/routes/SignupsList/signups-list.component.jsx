@@ -218,7 +218,11 @@ const SignupsList = () => {
     function convertEmailToMemberName(email) {
         var filtered_user = master_users.filter((user) => user.email === email)[0];
 
-        return `${filtered_user.name} (${filtered_user.grade}th)`;
+        if (!filtered_user) {
+            return `User Deleted (${email})`;
+        } else {
+            return `${filtered_user.name} (${filtered_user.grade}th)`;
+        }
     };
 
     function findEvent(rowEvent) {
